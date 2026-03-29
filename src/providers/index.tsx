@@ -1,8 +1,11 @@
 import { TooltipProvider } from "@/components/ui/tooltip.tsx";
 import { QueryProvider } from "@/providers/query-provider.tsx";
+import { ThemeProvider } from "@/providers/theme-provider.tsx";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => (
 	<QueryProvider>
-		<TooltipProvider>{children}</TooltipProvider>
+		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+			<TooltipProvider>{children}</TooltipProvider>
+		</ThemeProvider>
 	</QueryProvider>
 );

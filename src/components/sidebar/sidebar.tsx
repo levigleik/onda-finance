@@ -1,4 +1,10 @@
-import { ArrowLeftRight, ChartBar, DollarSign, User2 } from "lucide-react";
+import {
+	ArrowLeftRight,
+	ChartBar,
+	DollarSign,
+	Plus,
+	Waves,
+} from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -10,67 +16,50 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils.ts";
 
 export const AppSidebar = () => {
 	return (
-		<Sidebar>
-			<SidebarHeader className="p-4">
-				<SidebarMenu className="flex flex-col gap-1 mb-3 px-2">
+		<Sidebar collapsible="icon">
+			<SidebarHeader className="p-4 group-data-[collapsible=icon]:p-2">
+				<SidebarMenu className="mb-3 flex flex-col gap-1 px-2 group-data-[collapsible=icon]:mb-0 group-data-[collapsible=icon]:px-0">
 					<SidebarMenuItem>
 						<Link
 							to="/"
-							className="font-manrope font-black text-xl text-slate-900"
+							className="flex items-center gap-2 font-manrope text-xl font-black group-data-[collapsible=icon]:justify-center"
 						>
-							Onda Finance
+							<Waves className="shrink-0" />
+							<span className="group-data-[collapsible=icon]:hidden">
+								Onda Finance
+							</span>
 						</Link>
 					</SidebarMenuItem>
-					<SidebarMenuItem className="text-xs font-medium text-slate-500 tracking-wider uppercase">
+
+					<SidebarMenuItem className="text-xs font-medium uppercase tracking-wider text-foreground group-data-[collapsible=icon]:hidden">
 						Private Banking
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
-			<SidebarContent className="p-4">
+			<SidebarContent className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<Button
-							asChild
-							variant="ghost"
-							className={cn(
-								"w-full justify-start gap-3 px-3 py-2 rounded-lg font-manrope font-semibold text-sm",
-								"bg-white text-slate-900 transition-all duration-200 ease-in-out hover:bg-white",
-							)}
-						>
+						<SidebarMenuButton asChild isActive>
 							<Link to="/dashboard">
 								<ChartBar className="h-5 w-5 shrink-0" />
 								<span>Dashboard</span>
 							</Link>
-						</Button>
+						</SidebarMenuButton>
 					</SidebarMenuItem>
 					<SidebarMenuItem>
-						<Button
-							asChild
-							variant="ghost"
-							className={cn(
-								"w-full justify-start gap-3 px-3 py-2 rounded-lg font-manrope font-semibold text-sm",
-								"bg-white text-slate-900 transition-all duration-200 ease-in-out hover:bg-white",
-							)}
-						>
+						<SidebarMenuButton asChild>
 							<Link to="/transactions">
 								<DollarSign className="h-5 w-5 shrink-0" />
 								<span>Transactions</span>
 							</Link>
-						</Button>
+						</SidebarMenuButton>
 					</SidebarMenuItem>
 					<SidebarMenuItem>
-						<SidebarMenuButton
-							asChild
-							// className={cn(
-							// 	"w-full justify-start gap-3 px-3 py-2 rounded-lg font-manrope font-semibold text-sm",
-							// 	"bg-white text-slate-900 transition-all duration-200 ease-in-out hover:bg-white",
-							// )}
-						>
-							<Link to="/transactions">
+						<SidebarMenuButton asChild>
+							<Link to="/transfers">
 								<ArrowLeftRight className="h-5 w-5 shrink-0" />
 								<span>Transfers</span>
 							</Link>
@@ -78,12 +67,15 @@ export const AppSidebar = () => {
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarContent>
-			<SidebarFooter className="p-4">
+			<SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton>
-							<User2 /> Username
-						</SidebarMenuButton>
+						<Button asChild className="w-full text-lg">
+							<Link to="/transfers" className="flex justify-center p-6">
+								<Plus className="h-5 w-5 shrink-0" />
+								<span>New transfer</span>
+							</Link>
+						</Button>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarFooter>
