@@ -1,11 +1,5 @@
-import {
-	ArrowLeftRight,
-	ChartBar,
-	DollarSign,
-	Plus,
-	Waves,
-} from "lucide-react";
-import { Link } from "react-router";
+import { Plus, Waves } from "lucide-react";
+import { Link, useLocation } from "react-router"; // Adicionado useLocation
 import { Button } from "@/components/ui/button.tsx";
 import {
 	Sidebar,
@@ -18,7 +12,12 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils.ts";
 
+import { navItems } from "./nav-items"; // Importando nossos itens
+
 export const AppSidebar = () => {
+	// Pegando o caminho atual da URL
+	const location = useLocation();
+
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarHeader
@@ -82,34 +81,37 @@ export const AppSidebar = () => {
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
+
 			<SidebarContent className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton asChild isActive>
-							<Link to="/dashboard">
-								<ChartBar className="h-5 w-5 shrink-0" />
-								<span>Dashboard</span>
-							</Link>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-					<SidebarMenuItem>
-						<SidebarMenuButton asChild>
-							<Link to="/transactions">
-								<DollarSign className="h-5 w-5 shrink-0" />
-								<span>Transactions</span>
-							</Link>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-					<SidebarMenuItem>
-						<SidebarMenuButton asChild>
-							<Link to="/transfers">
-								<ArrowLeftRight className="h-5 w-5 shrink-0" />
-								<span>Transfers</span>
-							</Link>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
+					{navItems.map((item) => {
+						// Lógica para definir se está ativo
+						// Usa correspondência exata para a raiz ("/"), e startsWith para sub-rotas
+						const isActive =
+							item.url === "/"
+								? location.pathname === "/"
+								: location.pathname.startsWith(item.url);
+
+						return (
+							<SidebarMenuItem key={item.title}>
+								{/* Repassamos o isActive para o shadcn cuidar do estilo */}
+								{/* O tooltip garante que o nome apareça quando a sidebar estiver colapsada */}
+								<SidebarMenuButton
+									asChild
+									isActive={isActive}
+									tooltip={item.title}
+								>
+									<Link to={item.url}>
+										<item.icon className="h-5 w-5 shrink-0" />
+										<span>{item.title}</span>
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						);
+					})}
 				</SidebarMenu>
 			</SidebarContent>
+
 			<SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					<SidebarMenuItem>

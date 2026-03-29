@@ -3,6 +3,7 @@ import { AuthLayout } from "@/components/layout/auth-layout.tsx";
 import { RootLayout } from "@/components/layout/root-layout.tsx";
 import { DashboardPage } from "@/pages/dashboard/dashboard-page.tsx";
 import { LoginPage } from "@/pages/login/login-page.tsx";
+import { TransfersPage } from "@/pages/transfers/transfers-page.tsx";
 import { requireAuthLoader, requireGuestLoader } from "@/routes/guards.ts";
 
 export const router = createBrowserRouter([
@@ -12,7 +13,10 @@ export const router = createBrowserRouter([
 			{
 				Component: RootLayout,
 				loader: requireAuthLoader,
-				children: [{ index: true, Component: DashboardPage }],
+				children: [
+					{ index: true, Component: DashboardPage },
+					{ path: "transfers", Component: TransfersPage },
+				],
 			},
 			{
 				path: "",
