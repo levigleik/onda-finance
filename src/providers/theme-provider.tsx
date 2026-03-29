@@ -14,10 +14,15 @@ type ThemeProviderProps = {
 	storageKey?: string;
 };
 
+type ToggleThemeOptions = {
+	x: number;
+	y: number;
+};
+
 type ThemeProviderState = {
 	theme: Theme;
 	setTheme: (theme: Theme) => void;
-	toggleTheme: () => void;
+	toggleTheme: (options?: ToggleThemeOptions) => void;
 };
 
 const initialState: ThemeProviderState = {
@@ -33,7 +38,7 @@ const STYLE_ID = "theme-transition-styles";
 function injectStyles(css: string) {
 	if (typeof window === "undefined") return;
 
-	let style = document.getElementById(STYLE_ID) as HTMLStyleElement;
+	let style = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
 
 	if (!style) {
 		style = document.createElement("style");
@@ -44,45 +49,46 @@ function injectStyles(css: string) {
 	style.textContent = css;
 }
 
-function createAnimationCSS() {
+function getMaxRadius(x: number, y: number) {
+	const w = window.innerWidth;
+	const h = window.innerHeight;
+
+	const distances = [
+		Math.hypot(x, y),
+		Math.hypot(w - x, y),
+		Math.hypot(x, h - y),
+		Math.hypot(w - x, h - y),
+	];
+
+	return Math.max(...distances);
+}
+
+function createAnimationCSS(x: number, y: number, radius: number) {
 	return `
-  ::view-transition-group(root) {
-    animation-duration: 0.7s;
-    animation-timing-function: ease-out;
-  }
+		::view-transition-group(root) {
+			animation-duration: 0.7s;
+			animation-timing-function: ease-out;
+		}
 
-  ::view-transition-new(root) {
-    animation-name: reveal-light;
-  }
+		::view-transition-old(root),
+		.dark::view-transition-old(root) {
+			animation: none;
+			z-index: -1;
+		}
 
-  ::view-transition-old(root),
-  .dark::view-transition-old(root) {
-    animation: none;
-    z-index: -1;
-  }
+		::view-transition-new(root) {
+			animation: theme-reveal 0.7s ease-out;
+		}
 
-  .dark::view-transition-new(root) {
-    animation-name: reveal-dark;
-  }
-
-  @keyframes reveal-dark {
-    from {
-      clip-path: circle(0% at 0% 0%);
-    }
-    to {
-      clip-path: circle(150% at 0% 0%);
-    }
-  }
-
-  @keyframes reveal-light {
-    from {
-      clip-path: circle(0% at 0% 0%);
-    }
-    to {
-      clip-path: circle(150% at 0% 0%);
-    }
-  }
-  `;
+		@keyframes theme-reveal {
+			from {
+				clip-path: circle(0px at ${x}px ${y}px);
+			}
+			to {
+				clip-path: circle(${radius}px at ${x}px ${y}px);
+			}
+		}
+	`;
 }
 
 export function ThemeProvider({
@@ -91,13 +97,13 @@ export function ThemeProvider({
 	storageKey = "vite-ui-theme",
 	...props
 }: ThemeProviderProps) {
-	const [theme, setThemeState] = useState<Theme>(
-		() => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
-	);
+	const [theme, setThemeState] = useState<Theme>(() => {
+		const saved = localStorage.getItem(storageKey) as Theme | null;
+		return saved ?? defaultTheme;
+	});
 
 	useEffect(() => {
 		const root = document.documentElement;
-
 		root.classList.remove("light", "dark");
 		root.classList.add(theme);
 	}, [theme]);
@@ -110,22 +116,36 @@ export function ThemeProvider({
 		[storageKey],
 	);
 
-	const toggleTheme = useCallback(() => {
-		const next = theme === "dark" ? "light" : "dark";
+	const toggleTheme = useCallback(
+		(options?: ToggleThemeOptions) => {
+			const nextTheme = theme === "dark" ? "light" : "dark";
 
-		// injeta animação
-		injectStyles(createAnimationCSS());
+			const applyTheme = () => {
+				setTheme(nextTheme);
+			};
 
-		const applyTheme = () => setTheme(next);
+			if (typeof window === "undefined") {
+				applyTheme();
+				return;
+			}
 
-		// fallback
-		if (!document.startViewTransition) {
-			applyTheme();
-			return;
-		}
+			const x = options?.x ?? window.innerWidth / 2;
+			const y = options?.y ?? window.innerHeight / 2;
+			const radius = getMaxRadius(x, y);
 
-		document.startViewTransition(applyTheme);
-	}, [theme, setTheme]);
+			injectStyles(createAnimationCSS(x, y, radius));
+
+			if (!document.startViewTransition) {
+				applyTheme();
+				return;
+			}
+
+			document.startViewTransition(() => {
+				applyTheme();
+			});
+		},
+		[theme, setTheme],
+	);
 
 	const value = {
 		theme,
