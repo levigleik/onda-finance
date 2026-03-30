@@ -1,0 +1,21 @@
+{
+  "seo": {
+    "title": "Dashboard",
+    "description": "Track your balance, frequent contacts, and latest transfers in your Onda Finance account."
+  },
+  "currentBalance": "Current balance",
+  "monthlyYield": "Monthly yield",
+  "frequentContacts": "Frequent contacts",
+  "frequentContactsDescription": "Recipients calculated from the real transfer history to speed up new transfers.",
+  "emptyContactsTitle": "No frequent contacts yet",
+  "emptyContactsDescription": "As soon as you make transfers, the most recurring recipients will appear here for quick access.",
+  "transferAction": "Transfer",
+  "transferTo": "Transfer to {{name}}",
+  "transferCount_one": "{{count}} transfer",
+  "transferCount_other": "{{count}} transfers",
+  "lastTransferLabel": "Last transfer on {{date}}",
+  "latestTransfers": "Latest transfers",
+  "emptyTitle": "No recent transfers",
+  "emptyDescription": "As soon as you send a transfer, it will appear here among the three most recent records.",
+  "viewMore": "View more"
+}

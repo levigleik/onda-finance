@@ -1,0 +1,6 @@
+{
+  "open": "Abrir menu do usuário",
+  "fallbackName": "Usuário",
+  "fallbackEmail": "email@exemplo.com",
+  "logout": "Sair"
+}

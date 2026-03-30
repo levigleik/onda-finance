@@ -1,0 +1,10 @@
+{
+  "title": "All transfers",
+  "seo": {
+    "title": "All transfers",
+    "description": "Browse the full transfer history and track every outgoing payment in Onda Finance."
+  },
+  "emptyTitle": "No transfers found",
+  "emptyDescription": "When you create new transfers, every record will appear here in this full list.",
+  "newTransfer": "New transfer"
+}

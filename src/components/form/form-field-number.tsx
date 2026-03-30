@@ -15,6 +15,7 @@ interface FormFieldNumberProps<T extends FieldValues>
 	control: Control<T>;
 	name: Path<T>;
 	label?: string;
+	ariaLabel?: string;
 	onValueChange?: (value: number) => void;
 	formItemClassName?: string;
 }
@@ -23,6 +24,7 @@ export function FormFieldNumber<T extends FieldValues>({
 	control,
 	name,
 	label,
+	ariaLabel,
 	onValueChange,
 	formItemClassName,
 	...props
@@ -43,6 +45,7 @@ export function FormFieldNumber<T extends FieldValues>({
 				<NumberInputStepper
 					value={field.value}
 					onChange={field.onChange}
+					ariaLabel={ariaLabel ?? label}
 					className={cn(error && "border-destructive dark:border-destructive")}
 					inputProps={{
 						...props.inputProps,

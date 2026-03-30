@@ -1,0 +1,9 @@
+{
+  "eyebrow": "Erro inesperado",
+  "title": "Algo deu errado ao carregar esta página.",
+  "description": "Vamos voltar para a página inicial e recarregar a aplicação para tentar recuperar o estado.",
+  "details": "Detalhes",
+  "fallbackMessage": "Não foi possível carregar a aplicação corretamente.",
+  "unexpected": "Algo saiu do esperado.",
+  "goHome": "Ir para o início e recarregar"
+}

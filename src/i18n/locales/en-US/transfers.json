@@ -1,0 +1,87 @@
+{
+  "create": "New transfer",
+  "dialog": {
+    "title": "New transfer",
+    "description": "Fill in the recipient, amount, and date details to complete the transfer."
+  },
+  "table": {
+    "details": "Details",
+    "category": "Category",
+    "date": "Date",
+    "amount": "Amount",
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "scheduledFor": "Scheduled for {{date}}",
+    "todayAt": "Today, {{time}}"
+  },
+  "stepper": {
+    "recipient": "Recipient",
+    "amountAndDate": "Amount and date"
+  },
+  "step1": {
+    "badge": "Step 1",
+    "title": "Who will receive the transfer?",
+    "description": "The sender is automatically defined by the authenticated user. Here you only provide the recipient details.",
+    "recipientName": "Recipient name",
+    "recipientNamePlaceholder": "Ex: Marina Costa",
+    "recipientEmail": "Recipient email",
+    "recipientEmailPlaceholder": "recipient@onda.com",
+    "recipientDocument": "CPF",
+    "recipientDocumentPlaceholder": "000.000.000-00",
+    "senderTitle": "Authenticated sender",
+    "senderDescription": "Saved automatically in the transfer",
+    "name": "Name",
+    "email": "Email",
+    "senderFallbackName": "Authenticated user",
+    "senderFallbackEmail": "email@onda.com",
+    "continue": "Continue to amount and date"
+  },
+  "step2": {
+    "badge": "Step 2",
+    "title": "Set the amount, date, and review the participants.",
+    "description": "Before confirming, we review the sender, recipient, and transfer details in one place.",
+    "valuePreview": "Projected amount",
+    "availableBalance": "Available balance: {{balance}}",
+    "whenToSend": "When to send",
+    "sendNow": "Send now",
+    "sendNowDescription": "Processes using today's date.",
+    "schedule": "Schedule",
+    "scheduleDescription": "Choose a future date for the transfer.",
+    "transferAmount": "Transfer amount",
+    "availableToTransfer": "Available balance to transfer: {{balance}}",
+    "scheduledDate": "Scheduled date",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Ex: March project transfer",
+    "sender": "Sender",
+    "recipient": "Recipient",
+    "waitingRecipient": "Waiting for details",
+    "recipientNoEmail": "No email provided",
+    "recipientDocument": "Document: {{document}}",
+    "recipientNoDocument": "Document: No document provided",
+    "date": "Date",
+    "today": "Today",
+    "selectDate": "Select a date",
+    "balance": "Available balance",
+    "noDescription": "No description",
+    "back": "Back to recipient",
+    "confirm": "Confirm transfer",
+    "saving": "Saving..."
+  },
+  "toast": {
+    "successTitle": "Transfer completed successfully.",
+    "successToday": "{{recipient}} will receive {{amount}} today.",
+    "successScheduled": "{{recipient}} will receive {{amount}} on {{date}}."
+  },
+  "validation": {
+    "amountRequired": "Enter the transfer amount",
+    "amountPositive": "Enter an amount greater than zero",
+    "insufficientBalance": "Insufficient balance. Available: {{balance}}.",
+    "recipientName": "Enter the recipient's full name",
+    "recipientEmail": "Enter a valid recipient email",
+    "recipientDocumentFormat": "Enter CPF in the format 000.000.000-00",
+    "recipientDocument": "Enter a valid CPF",
+    "descriptionMax": "Description must be at most 120 characters long",
+    "scheduleDateRequired": "Select the scheduled date",
+    "scheduleDateFuture": "The schedule must be set to a future date"
+  }
+}

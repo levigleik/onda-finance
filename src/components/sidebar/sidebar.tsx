@@ -1,6 +1,7 @@
-import { Plus, Waves } from "lucide-react";
-import { Link, useLocation } from "react-router"; // Adicionado useLocation
-import { Button } from "@/components/ui/button.tsx";
+import { Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router";
+import { Brand } from "@/components/brand/brand";
 import {
 	Sidebar,
 	SidebarContent,
@@ -9,23 +10,34 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
+import {
+	buildLocalizedPath,
+	stripLanguageFromPath,
+} from "@/i18n/config";
+import { useAppLanguage } from "@/i18n/use-app-language";
 import { cn } from "@/lib/utils.ts";
 import { useTransferModalStore } from "@/stores/transfer-modal-store";
 
-import { navItems } from "./nav-items"; // Importando nossos itens
+import { navItems } from "./nav-items";
 
 export const AppSidebar = () => {
+	const { t } = useTranslation(["app", "nav"]);
 	const location = useLocation();
+	const { routeLanguage } = useAppLanguage();
+	const { isMobile, state } = useSidebar();
 	const openTransferModal = useTransferModalStore(
 		(state) => state.openTransferModal,
 	);
+	const currentPath = stripLanguageFromPath(location.pathname);
+	const isCollapsed = state === "collapsed" && !isMobile;
 
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarHeader
 				className={cn(
-					"h-16 overflow-hidden px-4 transition-[padding] duration-200",
+					"h-16 px-4 transition-[padding] duration-200",
 					"group-data-[collapsible=icon]:justify-center",
 					"group-data-[collapsible=icon]:px-2",
 				)}
@@ -39,70 +51,46 @@ export const AppSidebar = () => {
 				>
 					<SidebarMenuItem>
 						<Link
-							to="/"
-							className={cn(
-								"flex items-center gap-2 overflow-hidden",
-								"font-manrope text-xl font-black",
-							)}
+							to={buildLocalizedPath(routeLanguage)}
+							className="flex items-center group-data-[collapsible=icon]:justify-center"
 						>
-							<div className="flex size-8 shrink-0 items-center justify-center">
-								<Waves className="shrink-0" />
-							</div>
-
-							<div className="min-w-0 overflow-hidden">
-								<span
-									className={cn(
-										"block whitespace-nowrap",
-										"transition-[opacity,transform,max-width] duration-200 ease-out",
-										"opacity-100 translate-x-0 max-w-55",
-										"group-data-[collapsible=icon]:pointer-events-none",
-										"group-data-[collapsible=icon]:opacity-0",
-										"group-data-[collapsible=icon]:-translate-x-2",
-										"group-data-[collapsible=icon]:max-w-0",
-									)}
-								>
-									Onda Finance
-								</span>
-							</div>
+							<Brand
+								showWordmark={!isCollapsed}
+								showTagline={false}
+								iconContainerClassName="size-9 rounded-xl"
+								nameClassName="text-xl"
+							/>
 						</Link>
 					</SidebarMenuItem>
 
-					<SidebarMenuItem className="overflow-hidden">
-						<span
-							className={cn(
-								"block whitespace-nowrap text-xs font-medium uppercase tracking-wider text-foreground",
-								"transition-[opacity,transform,max-height] duration-200 ease-out",
-								"opacity-100 translate-y-0 max-h-6",
-								"group-data-[collapsible=icon]:pointer-events-none",
-								"group-data-[collapsible=icon]:opacity-0",
-								"group-data-[collapsible=icon]:-translate-y-1",
-								"group-data-[collapsible=icon]:max-h-0",
-							)}
-						>
-							Private Banking
-						</span>
-					</SidebarMenuItem>
+					{!isCollapsed ? (
+						<SidebarMenuItem className="overflow-hidden">
+							<span className="block whitespace-nowrap text-xs font-medium uppercase tracking-wider text-foreground transition-[opacity,transform,max-height] duration-200 ease-out">
+								{t("tagline", { ns: "app" })}
+							</span>
+						</SidebarMenuItem>
+					) : null}
 				</SidebarMenu>
 			</SidebarHeader>
 
-			<SidebarContent className="p-4 group-data-[collapsible=icon]:p-2">
+			<SidebarContent className="p-4 transition-[padding] duration-200 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					{navItems.map((item) => {
 						const isActive =
 							item.url === "/"
-								? location.pathname === "/"
-								: location.pathname.startsWith(item.url);
+								? currentPath === "/"
+								: currentPath.startsWith(item.url);
 
 						return (
-							<SidebarMenuItem key={item.title}>
+							<SidebarMenuItem key={item.titleKey}>
 								<SidebarMenuButton
 									asChild
 									isActive={isActive}
-									tooltip={item.title}
+									tooltip={t(item.titleKey, { ns: "nav" })}
 								>
-									<Link to={item.url}>
+									<Link to={buildLocalizedPath(routeLanguage, item.url)}>
 										<item.icon className="h-5 w-5 shrink-0" />
-										<span>{item.title}</span>
+										<span>{t(item.titleKey, { ns: "nav" })}</span>
 									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -114,14 +102,17 @@ export const AppSidebar = () => {
 			<SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<Button
+						<SidebarMenuButton
 							type="button"
-							className="w-full text-lg"
-							onClick={openTransferModal}
+							size="lg"
+							tooltip={t("newTransfer", { ns: "nav" })}
+							aria-label={t("newTransfer", { ns: "nav" })}
+							className="h-10 bg-primary text-primary-foreground shadow-sm transition-[background-color,color,box-shadow] duration-200 hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 data-active:bg-primary data-active:text-primary-foreground group-data-[collapsible=icon]:justify-center"
+							onClick={() => openTransferModal()}
 						>
 							<Plus className="h-5 w-5 shrink-0" />
-							<span>New transfer</span>
-						</Button>
+							{!isCollapsed ? <span>{t("newTransfer", { ns: "nav" })}</span> : null}
+						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarFooter>

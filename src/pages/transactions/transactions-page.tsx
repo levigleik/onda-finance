@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { TransfersTableSection } from "@/pages/dashboard/components/transfers-table-section";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,6 +54,7 @@ const getVisiblePages = (currentPage: number, totalPages: number) => {
 };
 
 export const TransactionsPage = () => {
+	const { t } = useTranslation("transactionsPage");
 	const [currentPage, setCurrentPage] = useState(1);
 	const openTransferModal = useTransferModalStore(
 		(state) => state.openTransferModal,
@@ -80,13 +82,17 @@ export const TransactionsPage = () => {
 	return (
 		<div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
 			<TransfersTableSection
-				title="Todas as transferências"
+				title={t("title")}
 				transfers={paginatedTransfers}
-				emptyTitle="Nenhuma transferência encontrada"
-				emptyDescription="Quando você criar novas transferências, todos os registros vão aparecer aqui nesta listagem completa."
+				emptyTitle={t("emptyTitle")}
+				emptyDescription={t("emptyDescription")}
 				headerAction={
-					<Button type="button" variant="ghost" onClick={openTransferModal}>
-						Nova transferência
+					<Button
+						type="button"
+						variant="ghost"
+						onClick={() => openTransferModal()}
+					>
+						{t("newTransfer")}
 					</Button>
 				}
 			/>
@@ -97,7 +103,6 @@ export const TransactionsPage = () => {
 						<PaginationItem>
 							<PaginationPrevious
 								href="#"
-								text="Anterior"
 								aria-disabled={currentPage === 1}
 								className={
 									currentPage === 1 ? "pointer-events-none opacity-50" : ""
@@ -134,7 +139,6 @@ export const TransactionsPage = () => {
 						<PaginationItem>
 							<PaginationNext
 								href="#"
-								text="Próxima"
 								aria-disabled={currentPage === totalPages}
 								className={
 									currentPage === totalPages

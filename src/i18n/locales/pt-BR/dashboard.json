@@ -1,0 +1,21 @@
+{
+  "seo": {
+    "title": "Dashboard",
+    "description": "Acompanhe saldo, contatos frequentes e últimas transferências da sua conta Onda Finance."
+  },
+  "currentBalance": "Saldo atual",
+  "monthlyYield": "Rendimento mensal",
+  "frequentContacts": "Contatos frequentes",
+  "frequentContactsDescription": "Destinatários calculados a partir do histórico real de transferências para agilizar novos envios.",
+  "emptyContactsTitle": "Nenhum contato frequente ainda",
+  "emptyContactsDescription": "Assim que você fizer transferências, os destinatários mais recorrentes aparecem aqui para acesso rápido.",
+  "transferAction": "Transferir",
+  "transferTo": "Transferir para {{name}}",
+  "transferCount_one": "{{count}} transferência",
+  "transferCount_other": "{{count}} transferências",
+  "lastTransferLabel": "Última transferência em {{date}}",
+  "latestTransfers": "Últimas transferências",
+  "emptyTitle": "Nenhuma transferência recente",
+  "emptyDescription": "Assim que você enviar uma transferência, ela aparece aqui entre os três registros mais recentes.",
+  "viewMore": "Ver mais"
+}

@@ -1,14 +1,22 @@
+import type { TFunction } from "i18next";
 import { z } from "zod";
+import type { AppLanguage } from "@/i18n/config";
+import { formatCurrency } from "@/i18n/format";
 
 export const transferTimingSchema = z.enum(["now", "scheduled"]);
 export type TransferTiming = z.infer<typeof transferTimingSchema>;
 
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-	style: "currency",
-	currency: "BRL",
-});
-
 const CPF_PATTERN = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+
+export interface TransfersFormValues {
+	recipientName: string;
+	recipientEmail: string;
+	recipientDocument: string;
+	amount: number;
+	transferTiming: TransferTiming;
+	transferDate?: string;
+	description?: string;
+}
 
 const normalizeDocument = (value: string) => value.replace(/\D/g, "");
 const normalizeCurrencyValue = (value: number) =>
@@ -69,50 +77,64 @@ const isValidFutureTransferDate = (value: string) => {
 	return selectedDate > today;
 };
 
-const amountSchema = z
-	.custom<number>(
-		(value) => typeof value === "number" && Number.isFinite(value),
-		"Informe o valor da transferência",
-	)
-	.refine((value) => value > 0, "Informe um valor maior que zero");
+const createAmountSchema = (t: TFunction) =>
+	z
+		.custom<number>(
+			(value) => typeof value === "number" && Number.isFinite(value),
+			t("validation.amountRequired"),
+		)
+		.refine((value) => value > 0, t("validation.amountPositive"));
 
-export const getInsufficientBalanceMessage = (availableBalance: number) =>
-	`Saldo insuficiente. Disponível: ${currencyFormatter.format(
-		normalizeCurrencyValue(Math.max(0, availableBalance)),
-	)}.`;
+export const getInsufficientBalanceMessage = (
+	availableBalance: number,
+	t: TFunction,
+	language: AppLanguage,
+) =>
+	t("validation.insufficientBalance", {
+		balance: formatCurrency(
+			language,
+			normalizeCurrencyValue(Math.max(0, availableBalance)),
+		),
+	});
 
-export const transferRecipientSchema = z.object({
-	recipientName: z
-		.string()
-		.trim()
-		.min(3, "Informe o nome completo do destinatário"),
-	recipientEmail: z.email("Informe um e-mail válido para o destinatário"),
-	recipientDocument: z
-		.string()
-		.trim()
-		.regex(CPF_PATTERN, "Informe o CPF no formato 000.000.000-00")
-		.refine(isValidCpf, "Informe um CPF válido")
-		.transform(normalizeDocument),
-});
+export const createTransferRecipientSchema = (t: TFunction) =>
+	z.object({
+		recipientName: z
+			.string()
+			.trim()
+			.min(3, t("validation.recipientName")),
+		recipientEmail: z.email(t("validation.recipientEmail")),
+		recipientDocument: z
+			.string()
+			.trim()
+			.regex(CPF_PATTERN, t("validation.recipientDocumentFormat"))
+			.refine(isValidCpf, t("validation.recipientDocument"))
+			.transform(normalizeDocument),
+	});
 
-const transferDetailsBaseSchema = z.object({
-	amount: amountSchema,
-	transferTiming: transferTimingSchema,
-	transferDate: z.string().optional(),
-	description: z
-		.string()
-		.trim()
-		.max(120, "A descrição pode ter no máximo 120 caracteres")
-		.optional(),
-});
+const createTransferDetailsBaseSchema = (t: TFunction) =>
+	z.object({
+		amount: createAmountSchema(t),
+		transferTiming: transferTimingSchema,
+		transferDate: z.string().optional(),
+		description: z
+			.string()
+			.trim()
+			.max(120, t("validation.descriptionMax"))
+			.optional(),
+	});
 
-export const createTransferDetailsSchema = (availableBalance: number) =>
-	transferDetailsBaseSchema.superRefine((data, ctx) => {
+export const createTransferDetailsSchema = (
+	availableBalance: number,
+	t: TFunction,
+	language: AppLanguage,
+) =>
+	createTransferDetailsBaseSchema(t).superRefine((data, ctx) => {
 		if (data.amount > normalizeCurrencyValue(Math.max(0, availableBalance))) {
 			ctx.addIssue({
 				code: "custom",
 				path: ["amount"],
-				message: getInsufficientBalanceMessage(availableBalance),
+				message: getInsufficientBalanceMessage(availableBalance, t, language),
 			});
 		}
 
@@ -124,7 +146,7 @@ export const createTransferDetailsSchema = (availableBalance: number) =>
 			ctx.addIssue({
 				code: "custom",
 				path: ["transferDate"],
-				message: "Selecione a data do agendamento",
+				message: t("validation.scheduleDateRequired"),
 			});
 			return;
 		}
@@ -133,20 +155,19 @@ export const createTransferDetailsSchema = (availableBalance: number) =>
 			ctx.addIssue({
 				code: "custom",
 				path: ["transferDate"],
-				message: "O agendamento deve ser para uma data futura",
+				message: t("validation.scheduleDateFuture"),
 			});
 		}
 	});
 
-export const createTransferFormSchema = (availableBalance: number) =>
-	transferRecipientSchema.merge(createTransferDetailsSchema(availableBalance));
-
-export const transferDetailsSchema = createTransferDetailsSchema(Number.POSITIVE_INFINITY);
-export const transferFormSchema = createTransferFormSchema(Number.POSITIVE_INFINITY);
-
-export type TransfersFormValues = z.infer<
-	ReturnType<typeof createTransferFormSchema>
->;
+export const createTransferFormSchema = (
+	availableBalance: number,
+	t: TFunction,
+	language: AppLanguage,
+) =>
+	createTransferRecipientSchema(t).merge(
+		createTransferDetailsSchema(availableBalance, t, language),
+	);
 
 export const transferRecipientFields = [
 	"recipientName",

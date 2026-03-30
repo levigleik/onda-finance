@@ -1,13 +1,22 @@
 import { AlertTriangle, Home } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { isRouteErrorResponse, useRouteError } from "react-router";
 import { Button } from "@/components/ui/button";
+import { buildLocalizedPath } from "@/i18n/config";
+import { useLanguageRouteData } from "@/routes/language";
 
-const getErrorMessage = (error: unknown) => {
+const getErrorMessage = (
+	error: unknown,
+	{
+		fallbackMessage,
+		unexpectedMessage,
+	}: { fallbackMessage: string; unexpectedMessage: string },
+) => {
 	if (isRouteErrorResponse(error)) {
 		const routeMessage =
 			typeof error.data === "string"
 				? error.data
-				: error.statusText || "Algo saiu do esperado.";
+				: error.statusText || unexpectedMessage;
 
 		return `${error.status} - ${routeMessage}`;
 	}
@@ -16,15 +25,20 @@ const getErrorMessage = (error: unknown) => {
 		return error.message;
 	}
 
-	return "Não foi possível carregar a aplicação corretamente.";
+	return fallbackMessage;
 };
 
 export const AppErrorBoundary = () => {
+	const { t } = useTranslation("errorBoundary");
+	const { routeLanguage } = useLanguageRouteData();
 	const error = useRouteError();
-	const errorMessage = getErrorMessage(error);
+	const errorMessage = getErrorMessage(error, {
+		fallbackMessage: t("fallbackMessage"),
+		unexpectedMessage: t("unexpected"),
+	});
 
 	const handleGoHomeWithReload = () => {
-		window.location.assign("/");
+		window.location.assign(buildLocalizedPath(routeLanguage));
 	};
 
 	return (
@@ -36,20 +50,19 @@ export const AppErrorBoundary = () => {
 
 				<div className="mt-6 space-y-3">
 					<p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-						Erro inesperado
+						{t("eyebrow")}
 					</p>
 					<h1 className="text-2xl font-semibold tracking-tight text-foreground">
-						Algo deu errado ao carregar esta página.
+						{t("title")}
 					</h1>
 					<p className="text-sm leading-6 text-muted-foreground">
-						Vamos voltar para a página inicial e recarregar a aplicação para
-						tentar recuperar o estado.
+						{t("description")}
 					</p>
 				</div>
 
 				<div className="mt-6 rounded-lg border bg-muted/20 px-4 py-3 text-left">
 					<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-						Detalhes
+						{t("details")}
 					</p>
 					<p className="mt-2 break-words text-sm text-foreground">
 						{errorMessage}
@@ -63,7 +76,7 @@ export const AppErrorBoundary = () => {
 					onClick={handleGoHomeWithReload}
 				>
 					<Home className="mr-2 h-4 w-4" />
-					Ir para o início e recarregar
+					{t("goHome")}
 				</Button>
 			</div>
 		</div>

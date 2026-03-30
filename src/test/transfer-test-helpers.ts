@@ -1,5 +1,6 @@
 import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import i18n from "@/i18n";
 import {
 	TEST_SCHEDULED_DATE,
 	TEST_TRANSFER_AMOUNT,
@@ -7,9 +8,13 @@ import {
 	TEST_TRANSFER_FIXTURE,
 } from "@/test/fixtures/transfers";
 
+const tTransfers = (key: string, options?: Record<string, unknown>) =>
+	i18n.t(key, { ns: "transfers", ...options });
+
 const getAmountInput = () =>
-	(screen.queryByPlaceholderText("R$ 0,00") ??
-		screen.getByRole("spinbutton")) as HTMLInputElement;
+	screen.getByRole("textbox", {
+		name: tTransfers("step2.transferAmount"),
+	}) as HTMLInputElement;
 
 const getScheduledDateButton = async () => {
 	await waitFor(() => {
@@ -32,22 +37,24 @@ export const fillRecipientStep = async (
 	overrides?: Partial<typeof TEST_TRANSFER_FIXTURE>,
 ) => {
 	await user.type(
-		screen.getByLabelText(/nome do destinatário/i),
+		screen.getByLabelText(tTransfers("step1.recipientName")),
 		overrides?.recipientName ?? TEST_TRANSFER_FIXTURE.recipientName,
 	);
 	await user.type(
-		screen.getByLabelText(/e-mail do destinatário/i),
+		screen.getByLabelText(tTransfers("step1.recipientEmail")),
 		overrides?.recipientEmail ?? TEST_TRANSFER_FIXTURE.recipientEmail,
 	);
 	await user.type(
-		screen.getByLabelText(/^cpf$/i),
+		screen.getByLabelText(tTransfers("step1.recipientDocument")),
 		(overrides?.recipientDocument ?? TEST_TRANSFER_FIXTURE.recipientDocument).replace(
 			/\D/g,
 			"",
 		),
 	);
 	await user.click(
-		screen.getByRole("button", { name: /continuar para valor e data/i }),
+		screen.getByRole("button", {
+			name: tTransfers("step1.continue"),
+		}),
 	);
 };
 
@@ -67,7 +74,11 @@ export const fillTransferDetailsStep = async (
 ) => {
 	if (transferTiming === "scheduled") {
 		await act(async () => {
-			fireEvent.click(screen.getByRole("button", { name: /agendar/i }));
+			fireEvent.click(
+				screen.getByRole("button", {
+					name: new RegExp(tTransfers("step2.schedule"), "i"),
+				}),
+			);
 		});
 		await user.click(await getScheduledDateButton());
 
@@ -87,13 +98,16 @@ export const fillTransferDetailsStep = async (
 	await user.type(amountInput, `${amount}`);
 
 	if (description !== undefined) {
-		await user.type(screen.getByLabelText(/descrição/i), description);
+		await user.type(
+			screen.getByLabelText(tTransfers("step2.descriptionLabel")),
+			description,
+		);
 	}
 };
 
 export const submitTransfer = async () => {
 	const submitButton = screen.getByRole("button", {
-		name: /confirmar transferência/i,
+		name: tTransfers("step2.confirm"),
 	});
 	const form = submitButton.closest("form");
 

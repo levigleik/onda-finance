@@ -1,42 +1,16 @@
 # Onda Finance
 
-Aplicação web desenvolvida para o desafio Front-End da Onda Finance, simulando um app bancário simples com foco em organização de código, boa experiência de uso e validação de fluxos críticos.
-
-## Link para acessar
-
-Publicação em produção: pendente de deploy.
+Aplicação web desenvolvida para o desafio Front-End da Onda Finance, simulando um app bancário com login mockado, dashboard, histórico de transferências, fluxo de transferência em 2 etapas e internacionalização.
 
 ## Stack
 
-- React + TypeScript
-- Vite
-- Tailwind CSS + CVA
-- shadcn/ui + Radix
-- React Router
-- React Query
-- Zustand
-- React Hook Form + Zod
-- Axios
-- Vitest + Testing Library
+O projeto utiliza a stack obrigatória do desafio.
 
-## Funcionalidades implementadas
+Bibliotecas e decisões complementares relevantes:
 
-- Login mock com validação de e-mail e senha
-- Persistência de sessão com Zustand `persist`
-- Dashboard com saldo atual e últimas transferências
-- Listagem completa de transferências com paginação
-- Fluxo de transferência em 2 etapas
-- Validação de nome, e-mail, CPF, valor, saldo disponível e data futura
-- Atualização imediata do saldo em tela após transferir
-- Transferências com status `concluida` ou `agendada`
-- Persistência local de saldo e transferências
-- Testes automatizados do fluxo de transferência
-
-## Rotas principais
-
-- `/login`: autenticação mock
-- `/`: dashboard
-- `/transactions`: histórico completo de transferências
+- `i18next` + `react-i18next` para i18n
+- `react-router` em modo DATA para sincronizar idioma com a URL
+- `Testing Library` para testes de comportamento da interface
 
 ## Como rodar o projeto
 
@@ -50,109 +24,77 @@ Publicação em produção: pendente de deploy.
 bun install
 ```
 
-### Ambiente de desenvolvimento
+### Desenvolvimento
 
 ```bash
 bun run dev
 ```
 
-### Build de produção
+### Build
 
 ```bash
 bun run build
 ```
 
-### Preview local da build
+### Preview da build
 
 ```bash
 bun run preview
 ```
 
-### Rodar testes
+### Testes
 
 ```bash
 bun run test
 ```
 
-### Rodar testes em modo watch
+### Testes em modo watch
 
 ```bash
 bun run test:watch
 ```
 
-## Fluxo implementado
-
-### Login
-
-- O login é mockado e não depende de API externa.
-- Após autenticar, o usuário é persistido localmente e redirecionado para o dashboard.
-
-### Dashboard
-
-- Exibe o saldo atual.
-- Mostra as 3 transferências mais recentes.
-- Permite navegar para a listagem completa.
-
-### Transferência
-
-- O fluxo é dividido em duas etapas:
-  1. dados do destinatário
-  2. valor, data e revisão
-- O remetente é preenchido a partir da sessão autenticada.
-- O saldo é validado durante o preenchimento e novamente no submit.
-- Transferências agendadas também debitam o saldo imediatamente no estado atual da aplicação.
-
-## Testes implementados
-
-A suíte de testes cobre o fluxo principal de transferência com Vitest + Testing Library:
-
-- bloqueio de avanço com destinatário inválido
-- transferência imediata com sucesso
-- prevenção de envio quando o saldo cai antes do submit
-- transferência agendada com débito imediato
-- atualização do dashboard após transferência bem-sucedida
-
 ## Decisões técnicas adotadas
 
-- Zustand foi usado para sessão, saldo e transferências por ser simples, direto e adequado para estado local persistido.
-- React Hook Form + Zod foi escolhido para manter o formulário performático e com regras de validação explícitas.
-- O fluxo de transferência foi separado em 2 etapas para reduzir carga cognitiva e melhorar UX.
-- React Router foi organizado com guards de acesso para rotas autenticadas e rotas de convidado.
-- shadcn/ui + Radix foram usados para construir a interface sobre primitives acessíveis e reutilizáveis.
-- React Query e Axios já estão preparados no projeto para a futura integração com backend real, embora o desafio atual use dados mockados/local-first.
-- Vitest foi configurado com Testing Library para validar comportamento real da interface, não apenas funções isoladas.
+- O estado de autenticação, saldo e transferências foi mantido em Zustand com persistência local para simplificar o fluxo mockado do desafio.
+- O formulário de transferência foi dividido em 2 etapas para reduzir carga cognitiva e facilitar as validações progressivas.
+- As validações foram centralizadas com React Hook Form + Zod para manter regras explícitas e feedback consistente na UI.
+- O i18n foi implementado com `i18next` + `react-i18next`, com `pt-BR` e `en-US`, usando lazy loading dos arquivos de tradução.
+- O idioma passou a ser controlado pela rota pública `/:lang/...`, mantendo o router como fonte de verdade e sincronizando `i18n.changeLanguage(...)`.
+- As formatações de moeda e data passaram a respeitar o idioma ativo da aplicação.
+- Os status de transferência foram convertidos para códigos internos neutros, deixando a tradução apenas na camada de interface.
+- Foi adicionado um seletor de idioma no navbar, preservando a rota atual ao trocar o locale.
+- A cobertura de testes foi atualizada para incluir fluxo principal, redirecionamentos de idioma e compatibilidade com dados persistidos antigos.
+
+## Extras implementados
+
+- i18n com `pt-BR` e `en-US`, lazy loading por namespace e rotas localizadas em `/:lang/...`.
+- Dark/light mode com persistência local e transição de troca de tema.
+- Atalho de transferência direta a partir dos contatos frequentes calculados com base no histórico real de transferências.
 
 ## Segurança
 
-Esta etapa não precisava ser implementada no código, mas abaixo está a estratégia recomendada para proteger a aplicação em um cenário real.
+O desafio pede apenas a explicação da estratégia, sem implementação obrigatória.
 
-### Como proteger contra engenharia reversa
+### Proteção contra engenharia reversa
 
-- Nunca embutir segredos, tokens privados, regras críticas de negócio ou credenciais no front-end.
-- Mover autorização, cálculo sensível e validações críticas para o backend.
-- Entregar builds minificadas e publicar sourcemaps apenas em ambientes privados de observabilidade.
-- Usar autenticação baseada em sessão segura ou tokens curtos com renovação controlada no servidor.
-- Aplicar rate limiting, auditoria e monitoramento para detectar abuso automatizado.
+- Nenhuma regra crítica de negócio, credencial ou segredo deve ficar embutido no front-end.
+- Validações sensíveis, autorização e cálculos financeiros devem ser executados no backend.
+- Em produção, a aplicação deve ser publicada com build minificada e sem exposição pública de segredos ou configurações internas.
+- Integrações com APIs devem usar tokens e credenciais controlados no servidor, nunca no cliente.
 
-### Como proteger contra vazamento de dados
+### Proteção contra vazamento de dados
 
-- Evitar armazenar dados sensíveis em `localStorage`; preferir cookies `HttpOnly`, `Secure` e `SameSite` quando houver backend real.
-- Trafegar dados apenas por HTTPS.
-- Minimizar o volume de dados expostos ao cliente com princípios de menor privilégio.
-- Mascarar dados pessoais em logs e ferramentas de observabilidade.
-- Implementar políticas de expiração de sessão, revogação de tokens e logout global.
-- Aplicar CSP, proteção contra XSS e validação/sanitização de payloads no backend.
+- Dados sensíveis não devem ser persistidos em `localStorage`; em cenário real, o ideal é usar sessão segura com backend.
+- Todo tráfego deve ocorrer via HTTPS.
+- O frontend deve receber apenas os dados estritamente necessários para cada tela.
+- Logs e ferramentas de observabilidade devem mascarar informações pessoais e financeiras.
+- Sessões devem ter expiração, revogação e logout seguro quando houver backend real.
 
 ## Melhorias futuras
 
-- Publicar a aplicação e adicionar o link de produção no README
-- Integrar login, saldo e transferências com API real usando Axios + React Query
-- Adicionar testes para login, guards de rota e paginação
-- Cobrir estados de erro, loading remoto e retries com dados vindos do servidor
-- Substituir persistência local por modelo seguro de autenticação com backend
-- Melhorar observabilidade e métricas de uso
-
-## Observações
-
-- O projeto usa `bun.lock`, então Bun é o gerenciador recomendado.
-- O build atual funciona normalmente, mas o Vite exibe um aviso de chunk grande em produção, o que pode ser endereçado com code splitting em uma próxima iteração.
+- Integrar login, saldo e transferências com API real usando Axios + React Query.
+- Adicionar cobertura para login, guards de rota e paginação com mais cenários de erro.
+- Melhorar o code splitting do bundle principal além do lazy loading das traduções.
+- Expandir os idiomas suportados além de `pt-BR` e `en-US`.
+- Substituir persistência local por um modelo de autenticação seguro com backend.

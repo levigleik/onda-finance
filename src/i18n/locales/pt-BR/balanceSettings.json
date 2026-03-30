@@ -1,0 +1,13 @@
+{
+  "title": "Configurações de saldo",
+  "description": "Ajuste manualmente o saldo exibido na conta e usado para validar novas transferências.",
+  "currentBalance": "Saldo atual",
+  "newBalance": "Novo saldo",
+  "save": "Salvar saldo",
+  "toastTitle": "Saldo atualizado com sucesso.",
+  "toastDescription": "Novo saldo disponível: {{balance}}.",
+  "validation": {
+    "invalid": "Informe um saldo válido",
+    "nonNegative": "O saldo não pode ser negativo"
+  }
+}

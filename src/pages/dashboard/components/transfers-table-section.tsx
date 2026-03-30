@@ -4,25 +4,13 @@ import {
 	SendHorizontal,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { formatCurrency, formatDate } from "@/i18n/format";
+import { useAppLanguage } from "@/i18n/use-app-language";
 import { cn } from "@/lib/utils";
 import { useTransferModalStore } from "@/stores/transfer-modal-store";
 import type { TransferRecord } from "@/stores/transfers-store";
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-	style: "currency",
-	currency: "BRL",
-});
-
-const shortDateFormatter = new Intl.DateTimeFormat("pt-BR", {
-	day: "2-digit",
-	month: "short",
-});
-
-const timeFormatter = new Intl.DateTimeFormat("pt-BR", {
-	hour: "2-digit",
-	minute: "2-digit",
-});
 
 const isSameDay = (left: Date, right: Date) =>
 	left.getFullYear() === right.getFullYear() &&
@@ -30,23 +18,33 @@ const isSameDay = (left: Date, right: Date) =>
 	left.getDate() === right.getDate();
 
 const formatTransferDate = (
+	language: Parameters<typeof formatDate>[0],
+	t: (key: string, options?: Record<string, unknown>) => string,
 	transferDate: string,
 	createdAt: string,
-	status: string,
+	status: TransferRecord["status"],
 ) => {
 	const date = new Date(`${transferDate}T00:00:00`);
 	const createdAtDate = new Date(createdAt);
 	const today = new Date();
+	const shortDate = formatDate(language, date, {
+		day: "2-digit",
+		month: "short",
+	});
+	const time = formatDate(language, createdAtDate, {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
 
-	if (status === "agendada") {
-		return `Agendada para ${shortDateFormatter.format(date)}`;
+	if (status === "scheduled") {
+		return t("table.scheduledFor", { date: shortDate });
 	}
 
 	if (isSameDay(date, today)) {
-		return `Hoje, ${timeFormatter.format(createdAtDate)}`;
+		return t("table.todayAt", { time });
 	}
 
-	return `${shortDateFormatter.format(date)}, ${timeFormatter.format(createdAtDate)}`;
+	return `${shortDate}, ${time}`;
 };
 
 interface TransfersTableSectionProps {
@@ -64,6 +62,8 @@ export const TransfersTableSection = ({
 	emptyDescription,
 	headerAction,
 }: TransfersTableSectionProps) => {
+	const { t } = useTranslation("transfers");
+	const { i18nLanguage } = useAppLanguage();
 	const openTransferModal = useTransferModalStore(
 		(state) => state.openTransferModal,
 	);
@@ -81,16 +81,16 @@ export const TransfersTableSection = ({
 						<thead>
 							<tr className="bg-muted/55">
 								<th className="px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									Detalhes
+									{t("table.details")}
 								</th>
 								<th className="px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									Categoria
+									{t("table.category")}
 								</th>
 								<th className="px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									Data
+									{t("table.date")}
 								</th>
 								<th className="px-8 py-4 text-right text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									Valor
+									{t("table.amount")}
 								</th>
 							</tr>
 						</thead>
@@ -111,8 +111,11 @@ export const TransfersTableSection = ({
 													{emptyDescription}
 												</p>
 											</div>
-											<Button type="button" onClick={openTransferModal}>
-												Criar transferência
+											<Button
+												type="button"
+												onClick={() => openTransferModal()}
+											>
+												{t("create")}
 											</Button>
 										</div>
 									</td>
@@ -126,14 +129,14 @@ export const TransfersTableSection = ({
 										<td className="px-8 py-5">
 											<div className="flex items-center gap-4">
 												<div
-													className={cn(
-														"flex h-10 w-10 items-center justify-center rounded-full",
-														transfer.status === "agendada"
-															? "bg-amber-500/10 text-amber-700"
-															: "bg-slate-100 text-slate-600",
-													)}
-												>
-													{transfer.status === "agendada" ? (
+												className={cn(
+													"flex h-10 w-10 items-center justify-center rounded-full",
+													transfer.status === "scheduled"
+														? "bg-amber-500/10 text-amber-700"
+														: "bg-slate-100 text-slate-600",
+												)}
+											>
+													{transfer.status === "scheduled" ? (
 														<CalendarClock className="h-4 w-4" />
 													) : (
 														<ArrowUpRight className="h-4 w-4" />
@@ -154,19 +157,21 @@ export const TransfersTableSection = ({
 											<span
 												className={cn(
 													"rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]",
-													transfer.status === "agendada"
+													transfer.status === "scheduled"
 														? "bg-amber-500/10 text-amber-700"
 														: "bg-primary/10 text-primary",
 												)}
 											>
-												{transfer.status === "agendada"
-													? "Agendada"
-													: "Concluída"}
+												{transfer.status === "scheduled"
+													? t("table.scheduled")
+													: t("table.completed")}
 											</span>
 										</td>
 
 										<td className="px-8 py-5 text-sm font-medium text-muted-foreground">
 											{formatTransferDate(
+												i18nLanguage,
+												t,
 												transfer.transferDate,
 												transfer.createdAt,
 												transfer.status,
@@ -175,7 +180,7 @@ export const TransfersTableSection = ({
 
 										<td className="px-8 py-5 text-right">
 											<span className="text-sm font-bold text-foreground">
-												- {currencyFormatter.format(transfer.amount)}
+												- {formatCurrency(i18nLanguage, transfer.amount)}
 											</span>
 										</td>
 									</tr>

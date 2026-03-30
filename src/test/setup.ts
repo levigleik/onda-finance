@@ -1,6 +1,8 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeEach, vi } from "vitest";
+import i18n from "@/i18n";
+import { DEFAULT_LANGUAGE } from "@/i18n/config";
 import { useAuthStore } from "@/stores/auth-store";
 import { useTransferModalStore } from "@/stores/transfer-modal-store";
 import { useTransfersStore } from "@/stores/transfers-store";
@@ -142,11 +144,12 @@ Object.defineProperty(document, "startViewTransition", {
 	},
 });
 
-beforeEach(() => {
+beforeEach(async () => {
 	vi.useRealTimers();
 	vi.stubGlobal("Date", MockDate);
 	localStorage.clear();
 	resetStores();
+	await i18n.changeLanguage(DEFAULT_LANGUAGE);
 	document.documentElement.className = "";
 	document.getElementById("theme-transition-styles")?.remove();
 });

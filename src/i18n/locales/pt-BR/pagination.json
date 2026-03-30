@@ -1,0 +1,8 @@
+{
+  "navigation": "Paginação",
+  "previous": "Anterior",
+  "next": "Próxima",
+  "previousAriaLabel": "Ir para a página anterior",
+  "nextAriaLabel": "Ir para a próxima página",
+  "morePages": "Mais páginas"
+}
