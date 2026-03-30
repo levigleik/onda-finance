@@ -41,7 +41,12 @@ export function ThemeToggle() {
 					variant="ghost"
 					className="rounded-full"
 					size="icon"
-					onClick={toggleTheme}
+					onClick={(e) =>
+						toggleTheme({
+							x: e.clientX,
+							y: e.clientY,
+						})
+					}
 				>
 					{isDark ? (
 						<Moon className="absolute h-[1.2rem] w-[1.2rem] transition-all dark:rotate-0" />

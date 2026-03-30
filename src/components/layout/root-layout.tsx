@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 import { Navbar } from "@/components/navbar/navbar.tsx";
 import { AppSidebar } from "@/components/sidebar/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { TransferDialog } from "@/pages/transfers/components/transfer-dialog";
 export const RootLayout = () => {
 	return (
 		<SidebarProvider>
@@ -16,6 +17,7 @@ export const RootLayout = () => {
 					<Outlet />
 				</main>
 			</div>
+			<TransferDialog />
 		</SidebarProvider>
 	);
 };
