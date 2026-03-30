@@ -34,6 +34,7 @@ interface TransfersDetailsStepProps {
 	senderName?: string;
 	senderEmail?: string;
 	values: TransfersFormValues;
+	availableBalance: number;
 	onTransferTimingChange: (timing: TransferTiming) => void;
 	onBack: () => void;
 	isSubmitting: boolean;
@@ -45,6 +46,7 @@ export const TransfersFormStep2 = ({
 	senderName,
 	senderEmail,
 	values,
+	availableBalance,
 	onTransferTimingChange,
 	onBack,
 	isSubmitting,
@@ -63,7 +65,7 @@ export const TransfersFormStep2 = ({
 				: "Selecione uma data";
 
 	return (
-		<section className="rounded-[1.75rem] border bg-card p-6 shadow-sm md:p-8">
+		<section className="rounded-md border bg-card p-6 shadow-sm md:p-8">
 			<div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 				<div className="space-y-2">
 					<p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
@@ -86,6 +88,9 @@ export const TransfersFormStep2 = ({
 					</p>
 					<p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
 						{amountPreview}
+					</p>
+					<p className="mt-2 text-xs text-muted-foreground">
+						Saldo disponível: {currencyFormatter.format(availableBalance)}
 					</p>
 				</div>
 			</div>
@@ -177,6 +182,15 @@ export const TransfersFormStep2 = ({
 						}}
 					/>
 
+					<div className="md:col-span-2 -mt-2">
+						<p className="text-xs text-muted-foreground">
+							Saldo disponível para transferir:{" "}
+							<span className="font-semibold text-foreground">
+								{currencyFormatter.format(availableBalance)}
+							</span>
+						</p>
+					</div>
+
 					{values.transferTiming === "scheduled" ? (
 						<FormFieldDate
 							control={control}
@@ -236,6 +250,15 @@ export const TransfersFormStep2 = ({
 							</div>
 							<p className="text-sm font-semibold text-foreground">
 								{transferDatePreview}
+							</p>
+						</div>
+
+						<div className="rounded-2xl border bg-background/30 p-4">
+							<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+								Saldo disponível
+							</p>
+							<p className="mt-2 text-sm font-semibold text-foreground">
+								{currencyFormatter.format(availableBalance)}
 							</p>
 						</div>
 

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { type DefaultValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Stepper, StepperContent, StepperPanel } from "@/components/ui/stepper";
@@ -11,9 +11,10 @@ import {
 	transferStepperIndicators,
 } from "@/pages/transfers/components/transfers-stepper-nav";
 import {
+	createTransferFormSchema,
+	getInsufficientBalanceMessage,
 	type TransfersFormValues,
 	type TransferTiming,
-	transferFormSchema,
 	transferRecipientFields,
 	transferRecipientSchema,
 } from "@/pages/transfers/validations/validations-transfers";
@@ -43,14 +44,24 @@ const buildDefaultValues = (): DefaultValues<TransfersFormValues> => ({
 	description: "",
 });
 
-export const FormTransfers = () => {
+interface FormTransfersProps {
+	onSuccess?: () => void;
+}
+
+export const FormTransfers = ({ onSuccess }: FormTransfersProps) => {
 	const [activeStep, setActiveStep] = useState(1);
 
 	const user = useAuthStore((state) => state.user);
+	const balance = useAuthStore((state) => state.balance);
+	const debitBalance = useAuthStore((state) => state.debitBalance);
 	const createTransfer = useTransfersStore((state) => state.createTransfer);
+	const validationSchema = useMemo(
+		() => createTransferFormSchema(balance),
+		[balance],
+	);
 
 	const form = useForm<TransfersFormValues>({
-		resolver: zodResolver(transferFormSchema),
+		resolver: zodResolver(validationSchema),
 		defaultValues: buildDefaultValues(),
 		mode: "onChange",
 	});
@@ -64,7 +75,11 @@ export const FormTransfers = () => {
 	}).success;
 
 	const isFormReadyToSubmit =
-		transferFormSchema.safeParse(values).success && Boolean(user);
+		validationSchema.safeParse(values).success && Boolean(user);
+
+	useEffect(() => {
+		void form.trigger("amount");
+	}, [balance, form]);
 
 	const handleStepChange = async (nextStep: number) => {
 		if (nextStep === activeStep) {
@@ -104,6 +119,15 @@ export const FormTransfers = () => {
 			data.transferTiming === "now"
 				? getTodayDate()
 				: (data.transferDate ?? "");
+		const latestBalance = useAuthStore.getState().balance;
+
+		if (data.amount > latestBalance) {
+			form.setError("amount", {
+				type: "manual",
+				message: getInsufficientBalanceMessage(latestBalance),
+			});
+			return;
+		}
 
 		const createdTransfer = await createTransfer({
 			sender: {
@@ -119,6 +143,7 @@ export const FormTransfers = () => {
 			transferDate,
 			description: data.description,
 		});
+		debitBalance(data.amount);
 
 		toast.success("Transferência realizada com sucesso.", {
 			description:
@@ -134,6 +159,7 @@ export const FormTransfers = () => {
 
 		form.reset(buildDefaultValues());
 		setActiveStep(1);
+		onSuccess?.();
 	});
 
 	const handleTransferTimingChange = (timing: TransferTiming) => {
@@ -198,6 +224,7 @@ export const FormTransfers = () => {
 								senderName={user?.name}
 								senderEmail={user?.email}
 								values={values}
+								availableBalance={balance}
 								onTransferTimingChange={handleTransferTimingChange}
 								onBack={() => setActiveStep(1)}
 								isSubmitting={form.formState.isSubmitting}

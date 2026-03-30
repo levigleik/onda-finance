@@ -26,7 +26,7 @@ export const TransfersFormStep1 = ({
 	senderEmail,
 	onContinue,
 }: TransfersRecipientStepProps) => (
-	<section className="rounded-[1.75rem] border bg-card p-6 shadow-sm md:p-8">
+	<section className="rounded-md border bg-card p-6 shadow-sm md:p-8">
 		<div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
 			<div className="space-y-2">
 				<p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">

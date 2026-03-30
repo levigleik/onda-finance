@@ -70,7 +70,7 @@
 .dark {
 	--background: #1f232a;
 	--foreground: #e5e5e5;
-	--card: #383e41;
+	--card: #1d293d;
 	--card-foreground: #e5e5e5;
 	--popover: #383e41;
 	--popover-foreground: #e5e5e5;
@@ -78,8 +78,8 @@
 	--primary-foreground: #ffffff;
 	--secondary: #008da9;
 	--secondary-foreground: #e5e5e5;
-	--muted: #444444;
-	--muted-foreground: #a3a3a3;
+	--muted: #45556c;
+	--muted-foreground: #d1d5dc;
 	--accent: #145e78;
 	--accent-foreground: #e5e5e5;
 	--destructive: #f47d7d;

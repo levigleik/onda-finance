@@ -3,9 +3,16 @@ import { z } from "zod";
 export const transferTimingSchema = z.enum(["now", "scheduled"]);
 export type TransferTiming = z.infer<typeof transferTimingSchema>;
 
+const currencyFormatter = new Intl.NumberFormat("pt-BR", {
+	style: "currency",
+	currency: "BRL",
+});
+
 const CPF_PATTERN = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
 
 const normalizeDocument = (value: string) => value.replace(/\D/g, "");
+const normalizeCurrencyValue = (value: number) =>
+	Math.round((value + Number.EPSILON) * 100) / 100;
 
 const isValidCpf = (value: string) => {
 	const digits = normalizeDocument(value);
@@ -45,7 +52,7 @@ const isValidCpf = (value: string) => {
 	return remainder === Number(digits[10]);
 };
 
-const isValidTransferDate = (value: string) => {
+const isValidFutureTransferDate = (value: string) => {
 	if (!value) {
 		return false;
 	}
@@ -59,7 +66,7 @@ const isValidTransferDate = (value: string) => {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 
-	return selectedDate >= today;
+	return selectedDate > today;
 };
 
 const amountSchema = z
@@ -68,6 +75,11 @@ const amountSchema = z
 		"Informe o valor da transferência",
 	)
 	.refine((value) => value > 0, "Informe um valor maior que zero");
+
+export const getInsufficientBalanceMessage = (availableBalance: number) =>
+	`Saldo insuficiente. Disponível: ${currencyFormatter.format(
+		normalizeCurrencyValue(Math.max(0, availableBalance)),
+	)}.`;
 
 export const transferRecipientSchema = z.object({
 	recipientName: z
@@ -83,7 +95,7 @@ export const transferRecipientSchema = z.object({
 		.transform(normalizeDocument),
 });
 
-export const transferDetailsSchema = z.object({
+const transferDetailsBaseSchema = z.object({
 	amount: amountSchema,
 	transferTiming: transferTimingSchema,
 	transferDate: z.string().optional(),
@@ -92,48 +104,49 @@ export const transferDetailsSchema = z.object({
 		.trim()
 		.max(120, "A descrição pode ter no máximo 120 caracteres")
 		.optional(),
-}).superRefine((data, ctx) => {
-	if (data.transferTiming === "now") {
-		return;
-	}
-
-	if (!data.transferDate) {
-		ctx.addIssue({
-			code: "custom",
-			path: ["transferDate"],
-			message: "Selecione a data do agendamento",
-		});
-		return;
-	}
-
-	if (!isValidTransferDate(data.transferDate)) {
-		ctx.addIssue({
-			code: "custom",
-			path: ["transferDate"],
-			message: "A data da transferência deve ser hoje ou futura",
-		});
-		return;
-	}
-
-	const selectedDate = new Date(`${data.transferDate}T00:00:00`);
-	const today = new Date();
-
-	selectedDate.setHours(0, 0, 0, 0);
-	today.setHours(0, 0, 0, 0);
-
-	if (selectedDate.getTime() <= today.getTime()) {
-		ctx.addIssue({
-			code: "custom",
-			path: ["transferDate"],
-			message: "O agendamento deve ser para uma data futura",
-		});
-	}
 });
 
-export const transferFormSchema =
-	transferRecipientSchema.merge(transferDetailsSchema);
+export const createTransferDetailsSchema = (availableBalance: number) =>
+	transferDetailsBaseSchema.superRefine((data, ctx) => {
+		if (data.amount > normalizeCurrencyValue(Math.max(0, availableBalance))) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["amount"],
+				message: getInsufficientBalanceMessage(availableBalance),
+			});
+		}
 
-export type TransfersFormValues = z.infer<typeof transferFormSchema>;
+		if (data.transferTiming === "now") {
+			return;
+		}
+
+		if (!data.transferDate) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["transferDate"],
+				message: "Selecione a data do agendamento",
+			});
+			return;
+		}
+
+		if (!isValidFutureTransferDate(data.transferDate)) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["transferDate"],
+				message: "O agendamento deve ser para uma data futura",
+			});
+		}
+	});
+
+export const createTransferFormSchema = (availableBalance: number) =>
+	transferRecipientSchema.merge(createTransferDetailsSchema(availableBalance));
+
+export const transferDetailsSchema = createTransferDetailsSchema(Number.POSITIVE_INFINITY);
+export const transferFormSchema = createTransferFormSchema(Number.POSITIVE_INFINITY);
+
+export type TransfersFormValues = z.infer<
+	ReturnType<typeof createTransferFormSchema>
+>;
 
 export const transferRecipientFields = [
 	"recipientName",

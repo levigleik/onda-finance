@@ -1,4 +1,4 @@
-import { ArrowLeftRight, ChartBar, DollarSign } from "lucide-react";
+import { ChartBar, DollarSign } from "lucide-react";
 
 export const navItems = [
 	{
@@ -10,10 +10,5 @@ export const navItems = [
 		title: "Transactions",
 		url: "/transactions",
 		icon: DollarSign,
-	},
-	{
-		title: "Transfers",
-		url: "/transfers",
-		icon: ArrowLeftRight,
 	},
 ];

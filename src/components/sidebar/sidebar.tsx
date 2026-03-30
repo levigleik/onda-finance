@@ -11,12 +11,15 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils.ts";
+import { useTransferModalStore } from "@/stores/transfer-modal-store";
 
 import { navItems } from "./nav-items"; // Importando nossos itens
 
 export const AppSidebar = () => {
-	// Pegando o caminho atual da URL
 	const location = useLocation();
+	const openTransferModal = useTransferModalStore(
+		(state) => state.openTransferModal,
+	);
 
 	return (
 		<Sidebar collapsible="icon">
@@ -51,7 +54,7 @@ export const AppSidebar = () => {
 									className={cn(
 										"block whitespace-nowrap",
 										"transition-[opacity,transform,max-width] duration-200 ease-out",
-										"opacity-100 translate-x-0 max-w-[220px]",
+										"opacity-100 translate-x-0 max-w-55",
 										"group-data-[collapsible=icon]:pointer-events-none",
 										"group-data-[collapsible=icon]:opacity-0",
 										"group-data-[collapsible=icon]:-translate-x-2",
@@ -85,8 +88,6 @@ export const AppSidebar = () => {
 			<SidebarContent className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					{navItems.map((item) => {
-						// Lógica para definir se está ativo
-						// Usa correspondência exata para a raiz ("/"), e startsWith para sub-rotas
 						const isActive =
 							item.url === "/"
 								? location.pathname === "/"
@@ -94,8 +95,6 @@ export const AppSidebar = () => {
 
 						return (
 							<SidebarMenuItem key={item.title}>
-								{/* Repassamos o isActive para o shadcn cuidar do estilo */}
-								{/* O tooltip garante que o nome apareça quando a sidebar estiver colapsada */}
 								<SidebarMenuButton
 									asChild
 									isActive={isActive}
@@ -115,11 +114,13 @@ export const AppSidebar = () => {
 			<SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<Button asChild className="w-full text-lg">
-							<Link to="/transfers" className="flex justify-center p-6">
-								<Plus className="h-5 w-5 shrink-0" />
-								<span>New transfer</span>
-							</Link>
+						<Button
+							type="button"
+							className="w-full text-lg"
+							onClick={openTransferModal}
+						>
+							<Plus className="h-5 w-5 shrink-0" />
+							<span>New transfer</span>
 						</Button>
 					</SidebarMenuItem>
 				</SidebarMenu>

@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider.tsx";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => (
 	<QueryProvider>
-		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+		<ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
 			<TooltipProvider>
 				<Toaster />
 				{children}

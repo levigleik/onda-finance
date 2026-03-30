@@ -9,7 +9,7 @@ import { Toaster as Sonner, type ToasterProps } from "sonner";
 import { useTheme } from "@/providers/theme-provider";
 
 const Toaster = ({ ...props }: ToasterProps) => {
-	const { theme = "dark" } = useTheme();
+	const { theme = "light" } = useTheme();
 
 	return (
 		<Sonner

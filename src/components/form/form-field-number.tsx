@@ -3,9 +3,9 @@ import type { Control, FieldValues, Path } from "react-hook-form";
 import { useController } from "react-hook-form";
 import {
 	Field,
-	FieldLabel,
 	FieldContent,
 	FieldError,
+	FieldLabel,
 } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import NumberInputStepper from "../ui/number-input-stepper";
@@ -58,7 +58,7 @@ export function FormFieldNumber<T extends FieldValues>({
 							}
 
 							props.inputProps?.onBlur?.(e);
-							field.onBlur(); // mantém RHF sync
+							field.onBlur();
 						},
 					}}
 					{...props}
