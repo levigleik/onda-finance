@@ -8,7 +8,7 @@ export interface TransferParticipant {
 	document?: string;
 }
 
-export type TransferStatus = "agendada" | "concluida";
+export type TransferStatus = "scheduled" | "completed";
 
 export interface TransferRecord {
 	id: string;
@@ -35,6 +35,22 @@ interface TransfersState {
 	clearTransfers: () => void;
 }
 
+const normalizeTransferStatus = (
+	status: string | undefined,
+	transferDate: string,
+): TransferStatus => {
+	switch (status) {
+		case "agendada":
+		case "scheduled":
+			return "scheduled";
+		case "concluida":
+		case "completed":
+			return "completed";
+		default:
+			return resolveTransferStatus(transferDate);
+	}
+};
+
 const resolveTransferStatus = (transferDate: string): TransferStatus => {
 	const selectedDate = new Date(`${transferDate}T00:00:00`);
 	const today = new Date();
@@ -42,7 +58,7 @@ const resolveTransferStatus = (transferDate: string): TransferStatus => {
 	selectedDate.setHours(0, 0, 0, 0);
 	today.setHours(0, 0, 0, 0);
 
-	return selectedDate.getTime() > today.getTime() ? "agendada" : "concluida";
+	return selectedDate.getTime() > today.getTime() ? "scheduled" : "completed";
 };
 
 export const useTransfersStore = create<TransfersState>()(
@@ -72,6 +88,21 @@ export const useTransfersStore = create<TransfersState>()(
 		}),
 		{
 			name: "onda-finance-transfers",
+			version: 1,
+			migrate: (persistedState) => {
+				const state = persistedState as Partial<TransfersState>;
+
+				return {
+					...state,
+					transfers: (state.transfers ?? []).map((transfer) => ({
+						...transfer,
+						status: normalizeTransferStatus(
+							transfer.status,
+							transfer.transferDate,
+						),
+					})),
+				};
+			},
 		},
 	),
 );

@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import {
@@ -10,6 +9,7 @@ import {
 	type PathValue,
 } from "react-hook-form";
 import type { Locale } from "react-day-picker";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -24,6 +24,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { useAppLanguage } from "@/i18n/use-app-language";
 import { cn } from "@/lib/utils";
 
 const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -75,16 +76,19 @@ export function FormFieldDate<T extends FieldValues>({
 	name,
 	label,
 	description,
-	placeholder = "Selecione uma data",
+	placeholder,
 	fieldClassName,
 	className,
 	disabled = false,
-	locale = ptBR,
+	locale,
 	calendarProps,
 	parseValue = defaultParseDateValue,
 	serializeValue = defaultSerializeDateValue<T>,
 }: FormFieldDateProps<T>) {
+	const { t } = useTranslation();
+	const { dateLocale } = useAppLanguage();
 	const [open, setOpen] = useState(false);
+	const resolvedLocale = locale ?? dateLocale;
 
 	return (
 		<Controller
@@ -124,9 +128,11 @@ export function FormFieldDate<T extends FieldValues>({
 									>
 										<CalendarIcon className="mr-2 h-4 w-4" />
 										{selectedDate ? (
-											format(selectedDate, "PPP", { locale })
+											format(selectedDate, "PPP", {
+												locale: resolvedLocale,
+											})
 										) : (
-											<span>{placeholder}</span>
+											<span>{placeholder ?? t("form.selectDate")}</span>
 										)}
 									</Button>
 								</PopoverTrigger>
@@ -135,7 +141,7 @@ export function FormFieldDate<T extends FieldValues>({
 									<Calendar
 										{...calendarProps}
 										mode="single"
-										locale={locale}
+										locale={resolvedLocale}
 										captionLayout="dropdown"
 										selected={selectedDate}
 										onSelect={(date) => {

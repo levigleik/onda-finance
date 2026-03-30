@@ -1,9 +1,14 @@
 import { render, type RenderOptions } from "@testing-library/react";
 import type { ReactElement, ReactNode } from "react";
-import { MemoryRouter } from "react-router";
+import {
+	createMemoryRouter,
+	MemoryRouter,
+	RouterProvider,
+} from "react-router";
 import { DashboardPage } from "@/pages/dashboard/dashboard-page";
 import { FormTransfers } from "@/pages/transfers/form/form-transfers";
 import { Providers } from "@/providers";
+import { appRoutes } from "@/routes/routes";
 import { DEFAULT_INITIAL_BALANCE, useAuthStore } from "@/stores/auth-store";
 import type { TransferRecord } from "@/stores/transfers-store";
 import { useTransfersStore } from "@/stores/transfers-store";
@@ -79,7 +84,7 @@ export const seedTransfers = (transfers: TransferRecord[]) => {
 export const renderWithProviders = (
 	ui: ReactElement,
 	{
-		route = "/",
+		route = "/pt-br",
 		initialEntries = [route],
 		...options
 	}: RenderWithProvidersOptions = {},
@@ -118,4 +123,22 @@ export const renderTransferFlow = ({
 	seedAuthenticatedSession({ user, balance });
 
 	return renderWithProviders(<TransferFlowHarness onSuccess={onSuccess} />, options);
+};
+
+export const renderAppRouter = ({
+	initialEntries = ["/pt-br"],
+}: {
+	initialEntries?: string[];
+} = {}) => {
+	const router = createMemoryRouter(appRoutes, { initialEntries });
+	const result = render(
+		<Providers>
+			<RouterProvider router={router} />
+		</Providers>,
+	);
+
+	return {
+		router,
+		...result,
+	};
 };

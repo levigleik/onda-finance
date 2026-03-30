@@ -1,0 +1,193 @@
+{
+	"app": {
+		"name": "Onda Finance",
+		"tagline": "Private Banking"
+	},
+	"common": {
+		"cancel": "Cancelar"
+	},
+	"language": {
+		"label": "Idioma",
+		"openMenu": "Abrir seletor de idioma",
+		"options": {
+			"pt-BR": "Português (Brasil)",
+			"en-US": "English (United States)"
+		}
+	},
+	"theme": {
+		"switchToLight": "Mudar para tema claro",
+		"switchToDark": "Mudar para tema escuro"
+	},
+	"pagination": {
+		"navigation": "Paginação",
+		"previous": "Anterior",
+		"next": "Próxima",
+		"previousAriaLabel": "Ir para a página anterior",
+		"nextAriaLabel": "Ir para a próxima página",
+		"morePages": "Mais páginas"
+	},
+	"form": {
+		"numberFieldAriaLabel": "Campo numérico",
+		"selectDate": "Selecione uma data"
+	},
+	"auth": {
+		"title": "Acesse sua conta",
+		"emailLabel": "E-mail",
+		"emailPlaceholder": "seu@email.com",
+		"passwordLabel": "Senha",
+		"passwordPlaceholder": "••••••",
+		"submit": "Entrar",
+		"submitting": "Entrando...",
+		"demoUserName": "Usuário Teste",
+		"validation": {
+			"invalidEmail": "E-mail inválido",
+			"passwordMin": "A senha deve ter pelo menos 6 caracteres"
+		}
+	},
+	"nav": {
+		"dashboard": "Dashboard",
+		"transactions": "Transações",
+		"newTransfer": "Nova transferência",
+		"openBalanceSettings": "Abrir configurações de saldo"
+	},
+	"userMenu": {
+		"open": "Abrir menu do usuário",
+		"fallbackName": "Usuário",
+		"fallbackEmail": "email@exemplo.com",
+		"logout": "Sair"
+	},
+	"balanceSettings": {
+		"title": "Configurações de saldo",
+		"description": "Ajuste manualmente o saldo exibido na conta e usado para validar novas transferências.",
+		"currentBalance": "Saldo atual",
+		"newBalance": "Novo saldo",
+		"save": "Salvar saldo",
+		"toastTitle": "Saldo atualizado com sucesso.",
+		"toastDescription": "Novo saldo disponível: {{balance}}.",
+		"validation": {
+			"invalid": "Informe um saldo válido",
+			"nonNegative": "O saldo não pode ser negativo"
+		}
+	},
+	"dashboard": {
+		"currentBalance": "Saldo atual",
+		"monthlyYield": "Rendimento mensal",
+		"frequentContacts": "Contatos frequentes",
+		"contacts": {
+			"ana": {
+				"name": "Ana Souza",
+				"email": "ana.souza@email.com"
+			},
+			"carlos": {
+				"name": "Carlos Lima",
+				"email": "carlos.lima@email.com"
+			}
+		},
+		"latestTransfers": "Últimas transferências",
+		"emptyTitle": "Nenhuma transferência recente",
+		"emptyDescription": "Assim que você enviar uma transferência, ela aparece aqui entre os três registros mais recentes.",
+		"viewMore": "Ver mais"
+	},
+	"transactionsPage": {
+		"title": "Todas as transferências",
+		"emptyTitle": "Nenhuma transferência encontrada",
+		"emptyDescription": "Quando você criar novas transferências, todos os registros vão aparecer aqui nesta listagem completa.",
+		"newTransfer": "Nova transferência"
+	},
+	"transfers": {
+		"create": "Nova transferência",
+		"dialog": {
+			"title": "Nova transferência",
+			"description": "Preencha os dados do destinatário, valor e data para concluir a transferência."
+		},
+		"table": {
+			"details": "Detalhes",
+			"category": "Categoria",
+			"date": "Data",
+			"amount": "Valor",
+			"scheduled": "Agendada",
+			"completed": "Concluída",
+			"scheduledFor": "Agendada para {{date}}",
+			"todayAt": "Hoje, {{time}}"
+		},
+		"stepper": {
+			"recipient": "Destinatário",
+			"amountAndDate": "Valor e data"
+		},
+		"step1": {
+			"badge": "Etapa 1",
+			"title": "Quem vai receber a transferência?",
+			"description": "O remetente é definido automaticamente pelo usuário autenticado. Aqui você só informa os dados do destinatário.",
+			"recipientName": "Nome do destinatário",
+			"recipientNamePlaceholder": "Ex: Marina Costa",
+			"recipientEmail": "E-mail do destinatário",
+			"recipientEmailPlaceholder": "destinatario@onda.com",
+			"recipientDocument": "CPF",
+			"recipientDocumentPlaceholder": "000.000.000-00",
+			"senderTitle": "Remetente autenticado",
+			"senderDescription": "Salvo automaticamente na transferência",
+			"name": "Nome",
+			"email": "E-mail",
+			"senderFallbackName": "Usuário autenticado",
+			"senderFallbackEmail": "email@onda.com",
+			"continue": "Continuar para valor e data"
+		},
+		"step2": {
+			"badge": "Etapa 2",
+			"title": "Defina valor, data e revise os participantes.",
+			"description": "Antes de confirmar, revisamos remetente, destinatário e os dados da transferência em um só lugar.",
+			"valuePreview": "Valor previsto",
+			"availableBalance": "Saldo disponível: {{balance}}",
+			"whenToSend": "Quando enviar",
+			"sendNow": "Enviar agora",
+			"sendNowDescription": "Processa usando a data de hoje.",
+			"schedule": "Agendar",
+			"scheduleDescription": "Escolha uma data futura para envio.",
+			"transferAmount": "Valor da transferência",
+			"availableToTransfer": "Saldo disponível para transferir: {{balance}}",
+			"scheduledDate": "Data do agendamento",
+			"descriptionLabel": "Descrição",
+			"descriptionPlaceholder": "Ex: repasse do projeto de março",
+			"sender": "Remetente",
+			"recipient": "Destinatário",
+			"waitingRecipient": "Aguardando preenchimento",
+			"recipientNoEmail": "Sem e-mail informado",
+			"recipientDocument": "Documento: {{document}}",
+			"recipientNoDocument": "Documento: Sem documento informado",
+			"date": "Data",
+			"today": "Hoje",
+			"selectDate": "Selecione uma data",
+			"balance": "Saldo disponível",
+			"noDescription": "Sem descrição",
+			"back": "Voltar para destinatário",
+			"confirm": "Confirmar transferência",
+			"saving": "Salvando..."
+		},
+		"toast": {
+			"successTitle": "Transferência realizada com sucesso.",
+			"successToday": "{{recipient}} receberá {{amount}} hoje.",
+			"successScheduled": "{{recipient}} receberá {{amount}} no dia {{date}}."
+		},
+		"validation": {
+			"amountRequired": "Informe o valor da transferência",
+			"amountPositive": "Informe um valor maior que zero",
+			"insufficientBalance": "Saldo insuficiente. Disponível: {{balance}}.",
+			"recipientName": "Informe o nome completo do destinatário",
+			"recipientEmail": "Informe um e-mail válido para o destinatário",
+			"recipientDocumentFormat": "Informe o CPF no formato 000.000.000-00",
+			"recipientDocument": "Informe um CPF válido",
+			"descriptionMax": "A descrição pode ter no máximo 120 caracteres",
+			"scheduleDateRequired": "Selecione a data do agendamento",
+			"scheduleDateFuture": "O agendamento deve ser para uma data futura"
+		}
+	},
+	"errorBoundary": {
+		"eyebrow": "Erro inesperado",
+		"title": "Algo deu errado ao carregar esta página.",
+		"description": "Vamos voltar para a página inicial e recarregar a aplicação para tentar recuperar o estado.",
+		"details": "Detalhes",
+		"fallbackMessage": "Não foi possível carregar a aplicação corretamente.",
+		"unexpected": "Algo saiu do esperado.",
+		"goHome": "Ir para o início e recarregar"
+	}
+}

@@ -10,12 +10,14 @@ import {
 	NumberField,
 	type NumberFieldProps,
 } from "react-aria-components";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 interface NumberInputStepperProps extends NumberFieldProps {
 	showStepper?: boolean;
 	className?: string;
 	showStepperOnHover?: boolean;
+	ariaLabel?: string;
 	placeholder?: string;
 	maxLength?: number;
 	inputProps?: ComponentProps<typeof Input>;
@@ -29,12 +31,14 @@ export default function NumberInputStepper({
 	onChange: onValueChange,
 	showStepper = true,
 	showStepperOnHover = false,
+	ariaLabel,
 	minValue = 0,
 	maxLength,
 	isDisabled: disabled,
 	inputProps,
 	...props
 }: NumberInputStepperProps) {
+	const { t } = useTranslation();
 	const [value, setValue] = useControllableState({
 		prop: controlledValue,
 		defaultProp: defaultValue,
@@ -43,7 +47,7 @@ export default function NumberInputStepper({
 
 	return (
 		<NumberField
-			aria-label="number-field"
+			aria-label={ariaLabel ?? t("form.numberFieldAriaLabel")}
 			value={value}
 			onChange={setValue}
 			minValue={minValue}

@@ -1,5 +1,6 @@
 import { Plus, Waves } from "lucide-react";
-import { Link, useLocation } from "react-router"; // Adicionado useLocation
+import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router";
 import { Button } from "@/components/ui/button.tsx";
 import {
 	Sidebar,
@@ -10,16 +11,24 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import {
+	buildLocalizedPath,
+	stripLanguageFromPath,
+} from "@/i18n/config";
+import { useAppLanguage } from "@/i18n/use-app-language";
 import { cn } from "@/lib/utils.ts";
 import { useTransferModalStore } from "@/stores/transfer-modal-store";
 
-import { navItems } from "./nav-items"; // Importando nossos itens
+import { navItems } from "./nav-items";
 
 export const AppSidebar = () => {
+	const { t } = useTranslation();
 	const location = useLocation();
+	const { routeLanguage } = useAppLanguage();
 	const openTransferModal = useTransferModalStore(
 		(state) => state.openTransferModal,
 	);
+	const currentPath = stripLanguageFromPath(location.pathname);
 
 	return (
 		<Sidebar collapsible="icon">
@@ -39,7 +48,7 @@ export const AppSidebar = () => {
 				>
 					<SidebarMenuItem>
 						<Link
-							to="/"
+							to={buildLocalizedPath(routeLanguage)}
 							className={cn(
 								"flex items-center gap-2 overflow-hidden",
 								"font-manrope text-xl font-black",
@@ -61,7 +70,7 @@ export const AppSidebar = () => {
 										"group-data-[collapsible=icon]:max-w-0",
 									)}
 								>
-									Onda Finance
+									{t("app.name")}
 								</span>
 							</div>
 						</Link>
@@ -79,7 +88,7 @@ export const AppSidebar = () => {
 								"group-data-[collapsible=icon]:max-h-0",
 							)}
 						>
-							Private Banking
+							{t("app.tagline")}
 						</span>
 					</SidebarMenuItem>
 				</SidebarMenu>
@@ -90,19 +99,19 @@ export const AppSidebar = () => {
 					{navItems.map((item) => {
 						const isActive =
 							item.url === "/"
-								? location.pathname === "/"
-								: location.pathname.startsWith(item.url);
+								? currentPath === "/"
+								: currentPath.startsWith(item.url);
 
 						return (
-							<SidebarMenuItem key={item.title}>
+							<SidebarMenuItem key={item.titleKey}>
 								<SidebarMenuButton
 									asChild
 									isActive={isActive}
-									tooltip={item.title}
+									tooltip={t(item.titleKey)}
 								>
-									<Link to={item.url}>
+									<Link to={buildLocalizedPath(routeLanguage, item.url)}>
 										<item.icon className="h-5 w-5 shrink-0" />
-										<span>{item.title}</span>
+										<span>{t(item.titleKey)}</span>
 									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -120,7 +129,7 @@ export const AppSidebar = () => {
 							onClick={openTransferModal}
 						>
 							<Plus className="h-5 w-5 shrink-0" />
-							<span>New transfer</span>
+							<span>{t("nav.newTransfer")}</span>
 						</Button>
 					</SidebarMenuItem>
 				</SidebarMenu>

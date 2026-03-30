@@ -1,4 +1,5 @@
 import { screen, within } from "@testing-library/react";
+import i18n from "@/i18n";
 import {
 	TEST_TRANSFER_AMOUNT,
 	TEST_TRANSFER_DESCRIPTION,
@@ -27,7 +28,7 @@ describe("transfer flow integration", () => {
 		expect(useAuthStore.getState().balance).toBe(TEST_UPDATED_BALANCE);
 
 		const latestTransfersSection = screen
-			.getByRole("heading", { name: /últimas transferências/i })
+			.getByRole("heading", { name: i18n.t("dashboard.latestTransfers") })
 			.closest("section");
 
 		expect(latestTransfersSection).not.toBeNull();
@@ -39,7 +40,9 @@ describe("transfer flow integration", () => {
 			latestTransfers.getByText(TEST_TRANSFER_FIXTURE.recipientName),
 		).toBeInTheDocument();
 		expect(latestTransfers.getByText(TEST_TRANSFER_DESCRIPTION)).toBeInTheDocument();
-		expect(latestTransfers.getByText("Concluída")).toBeInTheDocument();
+		expect(
+			latestTransfers.getByText(i18n.t("transfers.table.completed")),
+		).toBeInTheDocument();
 		expect(
 			latestTransfers.getByText(new RegExp(`-\\s*R\\$\\s*${TEST_TRANSFER_AMOUNT.toLocaleString("pt-BR")},00`.replace(".", "\\."))),
 		).toBeInTheDocument();

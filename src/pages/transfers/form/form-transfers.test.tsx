@@ -1,4 +1,5 @@
 import { act, fireEvent, screen } from "@testing-library/react";
+import i18n from "@/i18n";
 import {
 	TEST_AUTH_USER,
 	TEST_SCHEDULED_DATE,
@@ -22,23 +23,36 @@ describe("FormTransfers", () => {
 
 		renderFormTransfers();
 
-		await user.type(screen.getByLabelText(/nome do destinatário/i), "Ma");
-		await user.type(screen.getByLabelText(/e-mail do destinatário/i), "email");
-		await user.type(screen.getByLabelText(/^cpf$/i), "11111111111");
+		await user.type(
+			screen.getByLabelText(i18n.t("transfers.step1.recipientName")),
+			"Ma",
+		);
+		await user.type(
+			screen.getByLabelText(i18n.t("transfers.step1.recipientEmail")),
+			"email",
+		);
+		await user.type(
+			screen.getByLabelText(i18n.t("transfers.step1.recipientDocument")),
+			"11111111111",
+		);
 		await user.click(
-			screen.getByRole("button", { name: /continuar para valor e data/i }),
+			screen.getByRole("button", {
+				name: i18n.t("transfers.step1.continue"),
+			}),
 		);
 
 		expect(
-			screen.getByText("Informe o nome completo do destinatário"),
+			screen.getByText(i18n.t("transfers.validation.recipientName")),
 		).toBeInTheDocument();
 		expect(
-			screen.getByText("Informe um e-mail válido para o destinatário"),
+			screen.getByText(i18n.t("transfers.validation.recipientEmail")),
 		).toBeInTheDocument();
-		expect(screen.getByText("Informe um CPF válido")).toBeInTheDocument();
+		expect(
+			screen.getByText(i18n.t("transfers.validation.recipientDocument")),
+		).toBeInTheDocument();
 		expect(
 			screen.queryByRole("heading", {
-				name: /defina valor, data e revise os participantes/i,
+				name: i18n.t("transfers.step2.title"),
 			}),
 		).not.toBeInTheDocument();
 	});
@@ -52,7 +66,7 @@ describe("FormTransfers", () => {
 		await fillRecipientStep(user);
 		expect(
 			screen.getByRole("heading", {
-				name: /defina valor, data e revise os participantes/i,
+				name: i18n.t("transfers.step2.title"),
 			}),
 		).toBeInTheDocument();
 
@@ -61,7 +75,7 @@ describe("FormTransfers", () => {
 
 		const createdTransfer = useTransfersStore.getState().transfers[0];
 
-		expect(createdTransfer.status).toBe("concluida");
+		expect(createdTransfer.status).toBe("completed");
 		expect(createdTransfer.transferDate).toBe("2026-03-30");
 		expect(createdTransfer.sender).toEqual(TEST_AUTH_USER);
 		expect(createdTransfer.recipient).toEqual({
@@ -75,11 +89,11 @@ describe("FormTransfers", () => {
 		expect(onSuccess).toHaveBeenCalledTimes(1);
 		expect(
 			screen.getByRole("heading", {
-				name: /quem vai receber a transferência/i,
+				name: i18n.t("transfers.step1.title"),
 			}),
 		).toBeInTheDocument();
 		expect(
-			screen.getByLabelText(/nome do destinatário/i),
+			screen.getByLabelText(i18n.t("transfers.step1.recipientName")),
 		).toHaveValue("");
 	});
 
@@ -96,7 +110,7 @@ describe("FormTransfers", () => {
 		await fillTransferDetailsStep(user);
 
 		const submitButton = screen.getByRole("button", {
-			name: /confirmar transferência/i,
+			name: i18n.t("transfers.step2.confirm"),
 		});
 		const form = submitButton.closest("form");
 
@@ -108,9 +122,18 @@ describe("FormTransfers", () => {
 			fireEvent.submit(form as HTMLFormElement);
 		});
 
-		expect(
-			await screen.findByText(/Saldo insuficiente\.\s+Disponível:\s+R\$\s*1\.000,00\./),
-		).toBeInTheDocument();
+		const amountError = await screen.findByRole("alert");
+		expect(amountError.textContent?.replace(/\s+/g, " ").trim()).toBe(
+			i18n
+				.t("transfers.validation.insufficientBalance", {
+					balance: new Intl.NumberFormat("pt-BR", {
+						style: "currency",
+						currency: "BRL",
+					}).format(1_000),
+				})
+				.replace(/\s+/g, " ")
+				.trim(),
+		);
 		expect(useTransfersStore.getState().transfers).toHaveLength(0);
 		expect(useAuthStore.getState().balance).toBe(1_000);
 		expect(onSuccess).not.toHaveBeenCalled();
@@ -129,13 +152,13 @@ describe("FormTransfers", () => {
 
 		const createdTransfer = useTransfersStore.getState().transfers[0];
 
-		expect(createdTransfer.status).toBe("agendada");
+		expect(createdTransfer.status).toBe("scheduled");
 		expect(createdTransfer.transferDate).toBe(TEST_SCHEDULED_DATE);
 		expect(createdTransfer.amount).toBe(TEST_TRANSFER_AMOUNT);
 		expect(useAuthStore.getState().balance).toBe(TEST_UPDATED_BALANCE);
 		expect(
 			screen.getByRole("heading", {
-				name: /quem vai receber a transferência/i,
+				name: i18n.t("transfers.step1.title"),
 			}),
 		).toBeInTheDocument();
 	});

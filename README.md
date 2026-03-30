@@ -12,7 +12,8 @@ Publicação em produção: pendente de deploy.
 - Vite
 - Tailwind CSS + CVA
 - shadcn/ui + Radix
-- React Router
+- React Router (modo DATA)
+- i18next + react-i18next
 - React Query
 - Zustand
 - React Hook Form + Zod
@@ -31,12 +32,19 @@ Publicação em produção: pendente de deploy.
 - Transferências com status `concluida` ou `agendada`
 - Persistência local de saldo e transferências
 - Testes automatizados do fluxo de transferência
+- i18n com `pt-BR` e `en-US`
+- Carregamento lazy dos arquivos de tradução
+- Idioma sincronizado com a URL pública
+- Seletor de idioma no navbar
 
 ## Rotas principais
 
-- `/login`: autenticação mock
-- `/`: dashboard
-- `/transactions`: histórico completo de transferências
+- `/pt-br/login`: autenticação mock
+- `/pt-br`: dashboard
+- `/pt-br/transactions`: histórico completo de transferências
+- `/en-us/login`, `/en-us` e `/en-us/transactions`: equivalentes em inglês
+
+Rotas legadas sem prefixo de idioma são redirecionadas automaticamente para `pt-br`.
 
 ## Como rodar o projeto
 
@@ -92,6 +100,7 @@ bun run test:watch
 - Exibe o saldo atual.
 - Mostra as 3 transferências mais recentes.
 - Permite navegar para a listagem completa.
+- Mantém a navegação localizada de acordo com o idioma ativo.
 
 ### Transferência
 
@@ -102,6 +111,13 @@ bun run test:watch
 - O saldo é validado durante o preenchimento e novamente no submit.
 - Transferências agendadas também debitam o saldo imediatamente no estado atual da aplicação.
 
+### Internacionalização
+
+- O idioma da aplicação é definido pelo segmento `/:lang` da rota.
+- O `i18n.changeLanguage(...)` é sincronizado a partir do router.
+- As traduções são carregadas sob demanda com lazy loading, sem embutir todos os idiomas no bundle inicial.
+- O navbar possui um dropdown para alternar entre `pt-BR` e `en-US`, preservando a rota atual.
+
 ## Testes implementados
 
 A suíte de testes cobre o fluxo principal de transferência com Vitest + Testing Library:
@@ -111,6 +127,10 @@ A suíte de testes cobre o fluxo principal de transferência com Vitest + Testin
 - prevenção de envio quando o saldo cai antes do submit
 - transferência agendada com débito imediato
 - atualização do dashboard após transferência bem-sucedida
+- redirecionamento para idioma padrão
+- redirecionamento de idioma inválido
+- troca de idioma pela interface
+- migração de status persistidos antigos para os novos códigos internos
 
 ## Decisões técnicas adotadas
 
@@ -118,6 +138,9 @@ A suíte de testes cobre o fluxo principal de transferência com Vitest + Testin
 - React Hook Form + Zod foi escolhido para manter o formulário performático e com regras de validação explícitas.
 - O fluxo de transferência foi separado em 2 etapas para reduzir carga cognitiva e melhorar UX.
 - React Router foi organizado com guards de acesso para rotas autenticadas e rotas de convidado.
+- O i18n foi estruturado com `i18next` + `react-i18next`, usando router como fonte de verdade do idioma.
+- As traduções foram separadas por locale e carregadas dinamicamente para reduzir custo do bundle inicial.
+- Os status de transferência passaram a usar códigos internos neutros, com tradução apenas na camada de UI.
 - shadcn/ui + Radix foram usados para construir a interface sobre primitives acessíveis e reutilizáveis.
 - React Query e Axios já estão preparados no projeto para a futura integração com backend real, embora o desafio atual use dados mockados/local-first.
 - Vitest foi configurado com Testing Library para validar comportamento real da interface, não apenas funções isoladas.
@@ -150,6 +173,7 @@ Esta etapa não precisava ser implementada no código, mas abaixo está a estrat
 - Adicionar testes para login, guards de rota e paginação
 - Cobrir estados de erro, loading remoto e retries com dados vindos do servidor
 - Substituir persistência local por modelo seguro de autenticação com backend
+- Expandir os idiomas suportados e separar traduções em namespaces por domínio
 - Melhorar observabilidade e métricas de uso
 
 ## Observações

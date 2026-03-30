@@ -2,12 +2,12 @@ import { ChartBar, DollarSign } from "lucide-react";
 
 export const navItems = [
 	{
-		title: "Dashboard",
+		titleKey: "nav.dashboard",
 		url: "/",
 		icon: ChartBar,
 	},
 	{
-		title: "Transactions",
+		titleKey: "nav.transactions",
 		url: "/transactions",
 		icon: DollarSign,
 	},

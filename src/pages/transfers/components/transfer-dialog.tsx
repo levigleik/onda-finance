@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
 	Dialog,
 	DialogContent,
@@ -10,6 +11,7 @@ import { FormTransfers } from "@/pages/transfers/form/form-transfers";
 import { useTransferModalStore } from "@/stores/transfer-modal-store";
 
 export const TransferDialog = () => {
+	const { t } = useTranslation();
 	const isOpen = useTransferModalStore((state) => state.isTransferModalOpen);
 	const setTransferModalOpen = useTransferModalStore(
 		(state) => state.setTransferModalOpen,
@@ -25,11 +27,10 @@ export const TransferDialog = () => {
 					<div className="overflow-y-auto">
 						<DialogHeader className="border-b px-5 py-4 md:px-6">
 							<DialogTitle className="text-lg font-semibold">
-								Nova transferência
+								{t("transfers.dialog.title")}
 							</DialogTitle>
 							<DialogDescription>
-								Preencha os dados do destinatário, valor e data para concluir a
-								transferência.
+								{t("transfers.dialog.description")}
 							</DialogDescription>
 						</DialogHeader>
 

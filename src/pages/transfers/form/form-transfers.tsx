@@ -2,8 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { type DefaultValues, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Stepper, StepperContent, StepperPanel } from "@/components/ui/stepper";
+import { formatCurrency, formatDate } from "@/i18n/format";
+import { useAppLanguage } from "@/i18n/use-app-language";
 import { TransfersFormStep1 } from "@/pages/transfers/components/transfers-form-step-1";
 import { TransfersFormStep2 } from "@/pages/transfers/components/transfers-form-step-2";
 import {
@@ -12,25 +15,14 @@ import {
 } from "@/pages/transfers/components/transfers-stepper-nav";
 import {
 	createTransferFormSchema,
+	createTransferRecipientSchema,
 	getInsufficientBalanceMessage,
 	type TransfersFormValues,
 	type TransferTiming,
 	transferRecipientFields,
-	transferRecipientSchema,
 } from "@/pages/transfers/validations/validations-transfers";
 import { useAuthStore } from "@/stores/auth-store";
 import { useTransfersStore } from "@/stores/transfers-store";
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-	style: "currency",
-	currency: "BRL",
-});
-
-const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
-	day: "2-digit",
-	month: "long",
-	year: "numeric",
-});
 
 const getTodayDate = () => format(new Date(), "yyyy-MM-dd");
 
@@ -49,15 +41,21 @@ interface FormTransfersProps {
 }
 
 export const FormTransfers = ({ onSuccess }: FormTransfersProps) => {
+	const { t } = useTranslation();
+	const { i18nLanguage } = useAppLanguage();
 	const [activeStep, setActiveStep] = useState(1);
 
 	const user = useAuthStore((state) => state.user);
 	const balance = useAuthStore((state) => state.balance);
 	const debitBalance = useAuthStore((state) => state.debitBalance);
 	const createTransfer = useTransfersStore((state) => state.createTransfer);
+	const recipientValidationSchema = useMemo(
+		() => createTransferRecipientSchema(t),
+		[t],
+	);
 	const validationSchema = useMemo(
-		() => createTransferFormSchema(balance),
-		[balance],
+		() => createTransferFormSchema(balance, t, i18nLanguage),
+		[balance, i18nLanguage, t],
 	);
 
 	const form = useForm<TransfersFormValues>({
@@ -68,7 +66,7 @@ export const FormTransfers = ({ onSuccess }: FormTransfersProps) => {
 
 	const values = form.watch();
 
-	const isRecipientStepComplete = transferRecipientSchema.safeParse({
+	const isRecipientStepComplete = recipientValidationSchema.safeParse({
 		recipientName: values.recipientName,
 		recipientEmail: values.recipientEmail,
 		recipientDocument: values.recipientDocument,
@@ -115,6 +113,10 @@ export const FormTransfers = ({ onSuccess }: FormTransfersProps) => {
 			return;
 		}
 
+		if (typeof data.amount !== "number") {
+			return;
+		}
+
 		const transferDate =
 			data.transferTiming === "now"
 				? getTodayDate()
@@ -124,7 +126,7 @@ export const FormTransfers = ({ onSuccess }: FormTransfersProps) => {
 		if (data.amount > latestBalance) {
 			form.setError("amount", {
 				type: "manual",
-				message: getInsufficientBalanceMessage(latestBalance),
+				message: getInsufficientBalanceMessage(latestBalance, t, i18nLanguage),
 			});
 			return;
 		}
@@ -145,16 +147,26 @@ export const FormTransfers = ({ onSuccess }: FormTransfersProps) => {
 		});
 		debitBalance(data.amount);
 
-		toast.success("Transferência realizada com sucesso.", {
+		toast.success(t("transfers.toast.successTitle"), {
 			description:
-				`${createdTransfer.recipient.name} receberá ${currencyFormatter.format(createdTransfer.amount)} ` +
-				`${
-					data.transferTiming === "now"
-						? "hoje"
-						: `no dia ${dateFormatter.format(
+				data.transferTiming === "now"
+					? t("transfers.toast.successToday", {
+							recipient: createdTransfer.recipient.name,
+							amount: formatCurrency(i18nLanguage, createdTransfer.amount),
+						})
+					: t("transfers.toast.successScheduled", {
+							recipient: createdTransfer.recipient.name,
+							amount: formatCurrency(i18nLanguage, createdTransfer.amount),
+							date: formatDate(
+								i18nLanguage,
 								new Date(`${createdTransfer.transferDate}T00:00:00`),
-							)}`
-				}.`,
+								{
+									day: "2-digit",
+									month: "long",
+									year: "numeric",
+								},
+							),
+						}),
 		});
 
 		form.reset(buildDefaultValues());

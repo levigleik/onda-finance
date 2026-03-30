@@ -2,6 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
 	Tooltip,
@@ -11,10 +12,14 @@ import {
 import { useTheme } from "@/providers/theme-provider.tsx";
 
 export function ThemeToggle() {
+	const { t } = useTranslation();
 	const { toggleTheme, theme } = useTheme();
 	const [mounted, setMounted] = React.useState(false);
 
 	const isDark = theme === "dark";
+	const label = isDark
+		? t("theme.switchToLight")
+		: t("theme.switchToDark");
 
 	React.useEffect(() => {
 		setMounted(true);
@@ -29,7 +34,7 @@ export function ThemeToggle() {
 				disabled
 			>
 				<Moon className="h-[1.2rem] w-[1.2rem]" />
-				<span className="sr-only">toggleTheme</span>
+				<span className="sr-only">{label}</span>
 			</Button>
 		);
 	}
@@ -41,6 +46,7 @@ export function ThemeToggle() {
 					variant="ghost"
 					className="rounded-full"
 					size="icon"
+					aria-label={label}
 					onClick={(e) =>
 						toggleTheme({
 							x: e.clientX,
@@ -54,12 +60,10 @@ export function ThemeToggle() {
 						<Sun className="h-[1.2rem] w-[1.2rem] rotate-0 transition-all dark:-rotate-90" />
 					)}
 
-					<span className="sr-only">toggleTheme</span>
+					<span className="sr-only">{label}</span>
 				</Button>
 			</TooltipTrigger>
-			<TooltipContent className="font-normal text-sm">
-				toggleTheme
-			</TooltipContent>
+			<TooltipContent className="font-normal text-sm">{label}</TooltipContent>
 		</Tooltip>
 	);
 }
