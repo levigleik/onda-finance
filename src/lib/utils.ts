@@ -14,3 +14,5 @@ export const getInitials = (name?: string) => {
 		.substring(0, 2)
 		.toUpperCase();
 };
+export const delay = (ms: number) =>
+	new Promise((resolve) => setTimeout(resolve, ms));

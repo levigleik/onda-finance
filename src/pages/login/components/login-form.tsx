@@ -1,16 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 
+import { FormFieldText } from "@/components/form/form-field-text";
 import { Button } from "@/components/ui/button";
-import {
-	Field,
-	FieldContent,
-	FieldError,
-	FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth-store";
 
 const loginSchema = z.object({
@@ -45,46 +39,22 @@ export function LoginForm() {
 			className="space-y-4"
 			noValidate
 		>
-			<Controller
-				name="email"
+			<FormFieldText
 				control={form.control}
-				render={({ field, fieldState }) => (
-					<Field data-invalid={fieldState.invalid}>
-						<FieldLabel htmlFor={field.name}>E-mail</FieldLabel>
-						<FieldContent>
-							<Input
-								{...field}
-								id={field.name}
-								type="email"
-								placeholder="seu@email.com"
-								aria-invalid={fieldState.invalid}
-								autoComplete="email"
-							/>
-							{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-						</FieldContent>
-					</Field>
-				)}
+				name="email"
+				label="E-mail"
+				type="email"
+				placeholder="seu@email.com"
+				autoComplete="email"
 			/>
 
-			<Controller
-				name="password"
+			<FormFieldText
 				control={form.control}
-				render={({ field, fieldState }) => (
-					<Field data-invalid={fieldState.invalid}>
-						<FieldLabel htmlFor={field.name}>Senha</FieldLabel>
-						<FieldContent>
-							<Input
-								{...field}
-								id={field.name}
-								type="password"
-								placeholder="••••••"
-								aria-invalid={fieldState.invalid}
-								autoComplete="current-password"
-							/>
-							{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-						</FieldContent>
-					</Field>
-				)}
+				name="password"
+				label="Senha"
+				type="password"
+				placeholder="••••••"
+				autoComplete="current-password"
 			/>
 
 			<Button
