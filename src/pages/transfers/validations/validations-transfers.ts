@@ -81,16 +81,16 @@ const createAmountSchema = (t: TFunction) =>
 	z
 		.custom<number>(
 			(value) => typeof value === "number" && Number.isFinite(value),
-			t("transfers.validation.amountRequired"),
+			t("validation.amountRequired"),
 		)
-		.refine((value) => value > 0, t("transfers.validation.amountPositive"));
+		.refine((value) => value > 0, t("validation.amountPositive"));
 
 export const getInsufficientBalanceMessage = (
 	availableBalance: number,
 	t: TFunction,
 	language: AppLanguage,
 ) =>
-	t("transfers.validation.insufficientBalance", {
+	t("validation.insufficientBalance", {
 		balance: formatCurrency(
 			language,
 			normalizeCurrencyValue(Math.max(0, availableBalance)),
@@ -102,13 +102,13 @@ export const createTransferRecipientSchema = (t: TFunction) =>
 		recipientName: z
 			.string()
 			.trim()
-			.min(3, t("transfers.validation.recipientName")),
-		recipientEmail: z.email(t("transfers.validation.recipientEmail")),
+			.min(3, t("validation.recipientName")),
+		recipientEmail: z.email(t("validation.recipientEmail")),
 		recipientDocument: z
 			.string()
 			.trim()
-			.regex(CPF_PATTERN, t("transfers.validation.recipientDocumentFormat"))
-			.refine(isValidCpf, t("transfers.validation.recipientDocument"))
+			.regex(CPF_PATTERN, t("validation.recipientDocumentFormat"))
+			.refine(isValidCpf, t("validation.recipientDocument"))
 			.transform(normalizeDocument),
 	});
 
@@ -120,7 +120,7 @@ const createTransferDetailsBaseSchema = (t: TFunction) =>
 		description: z
 			.string()
 			.trim()
-			.max(120, t("transfers.validation.descriptionMax"))
+			.max(120, t("validation.descriptionMax"))
 			.optional(),
 	});
 
@@ -146,7 +146,7 @@ export const createTransferDetailsSchema = (
 			ctx.addIssue({
 				code: "custom",
 				path: ["transferDate"],
-				message: t("transfers.validation.scheduleDateRequired"),
+				message: t("validation.scheduleDateRequired"),
 			});
 			return;
 		}
@@ -155,7 +155,7 @@ export const createTransferDetailsSchema = (
 			ctx.addIssue({
 				code: "custom",
 				path: ["transferDate"],
-				message: t("transfers.validation.scheduleDateFuture"),
+				message: t("validation.scheduleDateFuture"),
 			});
 		}
 	});

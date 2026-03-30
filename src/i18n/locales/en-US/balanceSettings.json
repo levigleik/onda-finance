@@ -1,0 +1,13 @@
+{
+  "title": "Balance settings",
+  "description": "Manually adjust the balance shown in the account and used to validate new transfers.",
+  "currentBalance": "Current balance",
+  "newBalance": "New balance",
+  "save": "Save balance",
+  "toastTitle": "Balance updated successfully.",
+  "toastDescription": "New available balance: {{balance}}.",
+  "validation": {
+    "invalid": "Enter a valid balance",
+    "nonNegative": "Balance cannot be negative"
+  }
+}

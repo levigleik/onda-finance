@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useBalanceSettingsStore } from "@/stores/balance-settings-store";
 
 export const Navbar = () => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("nav");
 	const openBalanceSettings = useBalanceSettingsStore(
 		(state) => state.openBalanceSettings,
 	);
@@ -22,7 +22,7 @@ export const Navbar = () => {
 					size="icon"
 					className="rounded-full"
 					onClick={openBalanceSettings}
-					aria-label={t("nav.openBalanceSettings")}
+					aria-label={t("openBalanceSettings")}
 				>
 					<Settings2 className="h-4 w-4" />
 				</Button>

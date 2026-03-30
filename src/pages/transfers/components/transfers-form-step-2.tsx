@@ -44,7 +44,7 @@ export const TransfersFormStep2 = ({
 	isSubmitting,
 	isSubmitDisabled,
 }: TransfersDetailsStepProps) => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("transfers");
 	const { i18nLanguage } = useAppLanguage();
 	const amountPreview =
 		typeof values.amount === "number" && Number.isFinite(values.amount)
@@ -53,7 +53,7 @@ export const TransfersFormStep2 = ({
 
 	const transferDatePreview =
 		values.transferTiming === "now"
-			? t("transfers.step2.today")
+			? t("step2.today")
 			: values.transferDate
 				? formatDate(
 						i18nLanguage,
@@ -64,34 +64,34 @@ export const TransfersFormStep2 = ({
 							year: "numeric",
 						},
 					)
-				: t("transfers.step2.selectDate");
+				: t("step2.selectDate");
 
 	return (
 		<section className="rounded-md border bg-card p-6 shadow-sm md:p-8">
 			<div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 				<div className="space-y-2">
 					<p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-						{t("transfers.step2.badge")}
+						{t("step2.badge")}
 					</p>
 					<div>
 						<h2 className="text-2xl font-semibold tracking-tight text-foreground">
-							{t("transfers.step2.title")}
+							{t("step2.title")}
 						</h2>
 						<p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-							{t("transfers.step2.description")}
+							{t("step2.description")}
 						</p>
 					</div>
 				</div>
 
 				<div className="rounded-3xl border bg-background/30/30 px-5 py-4 text-right">
 					<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-						{t("transfers.step2.valuePreview")}
+						{t("step2.valuePreview")}
 					</p>
 					<p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
 						{amountPreview}
 					</p>
 					<p className="mt-2 text-xs text-muted-foreground">
-						{t("transfers.step2.availableBalance", {
+						{t("step2.availableBalance", {
 							balance: formatCurrency(i18nLanguage, availableBalance),
 						})}
 					</p>
@@ -107,7 +107,7 @@ export const TransfersFormStep2 = ({
 							render={({ field }) => (
 								<div className="space-y-2">
 									<p className="text-sm font-medium text-foreground">
-										{t("transfers.step2.whenToSend")}
+										{t("step2.whenToSend")}
 									</p>
 									<div className="grid gap-3 sm:grid-cols-2">
 										<Button
@@ -128,11 +128,9 @@ export const TransfersFormStep2 = ({
 													<Send className="h-4 w-4" />
 												</div>
 												<div>
-													<p className="font-semibold">
-														{t("transfers.step2.sendNow")}
-													</p>
+													<p className="font-semibold">{t("step2.sendNow")}</p>
 													<p className="text-xs text-muted-foreground">
-														{t("transfers.step2.sendNowDescription")}
+														{t("step2.sendNowDescription")}
 													</p>
 												</div>
 											</div>
@@ -156,11 +154,9 @@ export const TransfersFormStep2 = ({
 													<CalendarPlus2 className="h-4 w-4" />
 												</div>
 												<div>
-													<p className="font-semibold">
-														{t("transfers.step2.schedule")}
-													</p>
+													<p className="font-semibold">{t("step2.schedule")}</p>
 													<p className="text-xs text-muted-foreground">
-														{t("transfers.step2.scheduleDescription")}
+														{t("step2.scheduleDescription")}
 													</p>
 												</div>
 											</div>
@@ -174,7 +170,7 @@ export const TransfersFormStep2 = ({
 					<FormFieldNumber
 						control={control}
 						name="amount"
-						label={t("transfers.step2.transferAmount")}
+						label={t("step2.transferAmount")}
 						placeholder={formatCurrency(i18nLanguage, 0)}
 						minValue={0}
 						step={0.5}
@@ -189,19 +185,11 @@ export const TransfersFormStep2 = ({
 						}}
 					/>
 
-					<div className="md:col-span-2 -mt-2">
-						<p className="text-xs text-muted-foreground">
-							{t("transfers.step2.availableToTransfer", {
-								balance: formatCurrency(i18nLanguage, availableBalance),
-							})}
-						</p>
-					</div>
-
 					{values.transferTiming === "scheduled" ? (
 						<FormFieldDate
 							control={control}
 							name="transferDate"
-							label={t("transfers.step2.scheduledDate")}
+							label={t("step2.scheduledDate")}
 							calendarProps={{
 								disabled: (date) => startOfDay(date) <= startOfDay(new Date()),
 							}}
@@ -212,8 +200,8 @@ export const TransfersFormStep2 = ({
 						<FormFieldText
 							control={control}
 							name="description"
-							label={t("transfers.step2.descriptionLabel")}
-							placeholder={t("transfers.step2.descriptionPlaceholder")}
+							label={t("step2.descriptionLabel")}
+							placeholder={t("step2.descriptionPlaceholder")}
 							maxLength={120}
 						/>
 					</div>
@@ -224,33 +212,33 @@ export const TransfersFormStep2 = ({
 						<div className="mb-3 flex items-center gap-2">
 							<UserRound className="h-4 w-4 text-primary" />
 							<p className="text-sm font-semibold text-foreground">
-								{t("transfers.step2.sender")}
+								{t("step2.sender")}
 							</p>
 						</div>
 						<p className="text-sm font-semibold text-foreground">
-							{senderName || t("transfers.step1.senderFallbackName")}
+							{senderName || t("step1.senderFallbackName")}
 						</p>
 						<p className="mt-1 text-xs text-muted-foreground">
-							{senderEmail || t("transfers.step1.senderFallbackEmail")}
+							{senderEmail || t("step1.senderFallbackEmail")}
 						</p>
 					</div>
 
 					<div className="rounded-2xl border bg-background/30 p-4">
 						<p className="text-sm font-semibold text-foreground">
-							{t("transfers.step2.recipient")}
+							{t("step2.recipient")}
 						</p>
 						<p className="mt-2 text-sm font-semibold text-foreground">
-							{values.recipientName || t("transfers.step2.waitingRecipient")}
+							{values.recipientName || t("step2.waitingRecipient")}
 						</p>
 						<p className="mt-1 text-xs text-muted-foreground">
-							{values.recipientEmail || t("transfers.step2.recipientNoEmail")}
+							{values.recipientEmail || t("step2.recipientNoEmail")}
 						</p>
 						<p className="mt-1 text-xs text-muted-foreground">
 							{values.recipientDocument
-								? t("transfers.step2.recipientDocument", {
+								? t("step2.recipientDocument", {
 										document: values.recipientDocument,
 									})
-								: t("transfers.step2.recipientNoDocument")}
+								: t("step2.recipientNoDocument")}
 						</p>
 					</div>
 
@@ -258,7 +246,7 @@ export const TransfersFormStep2 = ({
 						<div className="rounded-2xl border bg-background/30 p-4">
 							<div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
 								<CalendarDays className="h-3.5 w-3.5" />
-								{t("transfers.step2.date")}
+								{t("step2.date")}
 							</div>
 							<p className="text-sm font-semibold text-foreground">
 								{transferDatePreview}
@@ -267,7 +255,7 @@ export const TransfersFormStep2 = ({
 
 						<div className="rounded-2xl border bg-background/30 p-4">
 							<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-								{t("transfers.step2.balance")}
+								{t("step2.balance")}
 							</p>
 							<p className="mt-2 text-sm font-semibold text-foreground">
 								{formatCurrency(i18nLanguage, availableBalance)}
@@ -276,10 +264,10 @@ export const TransfersFormStep2 = ({
 
 						<div className="rounded-2xl border bg-background/30 p-4">
 							<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-								{t("transfers.step2.descriptionLabel")}
+								{t("step2.descriptionLabel")}
 							</p>
 							<p className="mt-2 text-sm font-semibold text-foreground">
-								{values.description || t("transfers.step2.noDescription")}
+								{values.description || t("step2.noDescription")}
 							</p>
 						</div>
 					</div>
@@ -289,7 +277,7 @@ export const TransfersFormStep2 = ({
 			<div className="mt-8 flex flex-col-reverse gap-3 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
 				<Button type="button" variant="ghost" className="h-12" onClick={onBack}>
 					<ArrowLeft className="mr-2 h-4 w-4" />
-					{t("transfers.step2.back")}
+					{t("step2.back")}
 				</Button>
 
 				<Button
@@ -298,7 +286,7 @@ export const TransfersFormStep2 = ({
 					className="h-12 px-7"
 					disabled={isSubmitDisabled || isSubmitting}
 				>
-					{isSubmitting ? t("transfers.step2.saving") : t("transfers.step2.confirm")}
+					{isSubmitting ? t("step2.saving") : t("step2.confirm")}
 					<CheckCircle2 className="ml-2 h-4 w-4" />
 				</Button>
 			</div>

@@ -85,7 +85,7 @@ export function FormFieldDate<T extends FieldValues>({
 	parseValue = defaultParseDateValue,
 	serializeValue = defaultSerializeDateValue<T>,
 }: FormFieldDateProps<T>) {
-	const { t } = useTranslation();
+	const { t } = useTranslation("form");
 	const { dateLocale } = useAppLanguage();
 	const [open, setOpen] = useState(false);
 	const resolvedLocale = locale ?? dateLocale;
@@ -132,7 +132,7 @@ export function FormFieldDate<T extends FieldValues>({
 												locale: resolvedLocale,
 											})
 										) : (
-											<span>{placeholder ?? t("form.selectDate")}</span>
+											<span>{placeholder ?? t("selectDate")}</span>
 										)}
 									</Button>
 								</PopoverTrigger>

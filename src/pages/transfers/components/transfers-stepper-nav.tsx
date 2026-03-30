@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/stepper";
 
 const steps = [
-	{ step: 1, titleKey: "transfers.stepper.recipient" },
-	{ step: 2, titleKey: "transfers.stepper.amountAndDate" },
+	{ step: 1, titleKey: "stepper.recipient" },
+	{ step: 2, titleKey: "stepper.amountAndDate" },
 ];
 
 interface TransfersStepperNavProps {
@@ -29,34 +29,32 @@ export const TransfersStepperNav = ({
 	isRecipientStepComplete,
 	isSubmitting,
 }: TransfersStepperNavProps) => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("transfers");
 
 	return (
-		<div className="mx-auto max-w-2xl">
-			<StepperNav>
-				{steps.map((step, index) => (
-					<StepperItem
-						key={step.step}
-						step={step.step}
-						completed={
-							step.step === 1 && activeStep > 1 && isRecipientStepComplete
-						}
-						loading={step.step === 2 && isSubmitting}
-						className="relative flex-1 items-start"
-					>
-						<div className="flex flex-col gap-2.5">
-							<StepperIndicator>{step.step}</StepperIndicator>
-							<StepperTitle className="text-xs font-bold uppercase tracking-[0.22em]">
-								{t(step.titleKey)}
-							</StepperTitle>
-						</div>
+		<StepperNav className="w-full justify-between max-w-4xl">
+			{steps.map((step, index) => (
+				<StepperItem
+					key={step.step}
+					step={step.step}
+					completed={
+						step.step === 1 && activeStep > 1 && isRecipientStepComplete
+					}
+					loading={step.step === 2 && isSubmitting}
+					className="relative flex-1 items-start"
+				>
+					<div className="flex flex-col gap-2.5 items-center">
+						<StepperIndicator>{step.step}</StepperIndicator>
+						<StepperTitle className="text-xs font-bold uppercase tracking-[0.22em]">
+							{t(step.titleKey)}
+						</StepperTitle>
+					</div>
 
-						{steps.length > index + 1 ? (
-							<StepperSeparator className="absolute inset-x-0 top-4 left-2/5 m-0 group-data-[state=completed]/step:bg-primary group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none" />
-						) : null}
-					</StepperItem>
-				))}
-			</StepperNav>
-		</div>
+					{steps.length > index + 1 ? (
+						<StepperSeparator className="absolute inset-x-0 top-4 left-[calc(50%+1rem)] m-0 group-data-[state=completed]/step:bg-primary group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none" />
+					) : null}
+				</StepperItem>
+			))}
+		</StepperNav>
 	);
 };

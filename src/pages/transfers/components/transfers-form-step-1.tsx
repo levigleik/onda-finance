@@ -27,21 +27,21 @@ export const TransfersFormStep1 = ({
 	senderEmail,
 	onContinue,
 }: TransfersRecipientStepProps) => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("transfers");
 
 	return (
 		<section className="rounded-md border bg-card p-6 shadow-sm md:p-8">
 			<div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
 				<div className="space-y-2">
 					<p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-						{t("transfers.step1.badge")}
+						{t("step1.badge")}
 					</p>
 					<div>
 						<h2 className="text-2xl font-semibold tracking-tight text-foreground">
-							{t("transfers.step1.title")}
+							{t("step1.title")}
 						</h2>
 						<p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-							{t("transfers.step1.description")}
+							{t("step1.description")}
 						</p>
 					</div>
 				</div>
@@ -53,8 +53,8 @@ export const TransfersFormStep1 = ({
 						<FormFieldText
 							control={control}
 							name="recipientName"
-							label={t("transfers.step1.recipientName")}
-							placeholder={t("transfers.step1.recipientNamePlaceholder")}
+							label={t("step1.recipientName")}
+							placeholder={t("step1.recipientNamePlaceholder")}
 							autoComplete="name"
 						/>
 					</div>
@@ -62,17 +62,17 @@ export const TransfersFormStep1 = ({
 					<FormFieldText
 						control={control}
 						name="recipientEmail"
-						label={t("transfers.step1.recipientEmail")}
+						label={t("step1.recipientEmail")}
 						type="email"
-						placeholder={t("transfers.step1.recipientEmailPlaceholder")}
+						placeholder={t("step1.recipientEmailPlaceholder")}
 						autoComplete="email"
 					/>
 
 					<FormFieldText
 						control={control}
 						name="recipientDocument"
-						label={t("transfers.step1.recipientDocument")}
-						placeholder={t("transfers.step1.recipientDocumentPlaceholder")}
+						label={t("step1.recipientDocument")}
+						placeholder={t("step1.recipientDocumentPlaceholder")}
 						inputMode="numeric"
 						pattern="\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"
 						autoComplete="off"
@@ -88,10 +88,10 @@ export const TransfersFormStep1 = ({
 						</div>
 						<div>
 							<p className="text-sm font-semibold text-foreground">
-								{t("transfers.step1.senderTitle")}
+								{t("step1.senderTitle")}
 							</p>
 							<p className="text-xs text-muted-foreground">
-								{t("transfers.step1.senderDescription")}
+								{t("step1.senderDescription")}
 							</p>
 						</div>
 					</div>
@@ -99,20 +99,20 @@ export const TransfersFormStep1 = ({
 					<div className="space-y-4">
 						<div className="rounded-2xl border bg-background/30/20 p-4">
 							<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-								{t("transfers.step1.name")}
+								{t("step1.name")}
 							</p>
 							<p className="mt-2 text-sm font-semibold text-foreground">
-								{senderName || t("transfers.step1.senderFallbackName")}
+								{senderName || t("step1.senderFallbackName")}
 							</p>
 						</div>
 
 						<div className="rounded-2xl border bg-background/30/20 p-4">
 							<div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
 								<Mail className="h-3.5 w-3.5" />
-								{t("transfers.step1.email")}
+								{t("step1.email")}
 							</div>
 							<p className="text-sm font-semibold text-foreground">
-								{senderEmail || t("transfers.step1.senderFallbackEmail")}
+								{senderEmail || t("step1.senderFallbackEmail")}
 							</p>
 						</div>
 					</div>
@@ -126,7 +126,7 @@ export const TransfersFormStep1 = ({
 					className="h-12 px-7"
 					onClick={onContinue}
 				>
-					{t("transfers.step1.continue")}
+					{t("step1.continue")}
 					<ArrowRight className="ml-2 h-4 w-4" />
 				</Button>
 			</div>

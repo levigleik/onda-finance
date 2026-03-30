@@ -66,10 +66,35 @@ bun run test:watch
 - Foi adicionado um seletor de idioma no navbar, preservando a rota atual ao trocar o locale.
 - A cobertura de testes foi atualizada para incluir fluxo principal, redirecionamentos de idioma e compatibilidade com dados persistidos antigos.
 
+## Extras implementados
+
+- i18n com `pt-BR` e `en-US`, lazy loading por namespace e rotas localizadas em `/:lang/...`.
+- Dark/light mode com persistência local e transição de troca de tema.
+- Atalho de transferência direta a partir dos contatos frequentes calculados com base no histórico real de transferências.
+
+## Segurança
+
+O desafio pede apenas a explicação da estratégia, sem implementação obrigatória.
+
+### Proteção contra engenharia reversa
+
+- Nenhuma regra crítica de negócio, credencial ou segredo deve ficar embutido no front-end.
+- Validações sensíveis, autorização e cálculos financeiros devem ser executados no backend.
+- Em produção, a aplicação deve ser publicada com build minificada e sem exposição pública de segredos ou configurações internas.
+- Integrações com APIs devem usar tokens e credenciais controlados no servidor, nunca no cliente.
+
+### Proteção contra vazamento de dados
+
+- Dados sensíveis não devem ser persistidos em `localStorage`; em cenário real, o ideal é usar sessão segura com backend.
+- Todo tráfego deve ocorrer via HTTPS.
+- O frontend deve receber apenas os dados estritamente necessários para cada tela.
+- Logs e ferramentas de observabilidade devem mascarar informações pessoais e financeiras.
+- Sessões devem ter expiração, revogação e logout seguro quando houver backend real.
+
 ## Melhorias futuras
 
 - Integrar login, saldo e transferências com API real usando Axios + React Query.
 - Adicionar cobertura para login, guards de rota e paginação com mais cenários de erro.
 - Melhorar o code splitting do bundle principal além do lazy loading das traduções.
-- Expandir os idiomas suportados e separar traduções em namespaces por domínio.
+- Expandir os idiomas suportados além de `pt-BR` e `en-US`.
 - Substituir persistência local por um modelo de autenticação seguro com backend.

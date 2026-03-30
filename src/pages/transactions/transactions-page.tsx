@@ -54,7 +54,7 @@ const getVisiblePages = (currentPage: number, totalPages: number) => {
 };
 
 export const TransactionsPage = () => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("transactionsPage");
 	const [currentPage, setCurrentPage] = useState(1);
 	const openTransferModal = useTransferModalStore(
 		(state) => state.openTransferModal,
@@ -82,13 +82,17 @@ export const TransactionsPage = () => {
 	return (
 		<div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
 			<TransfersTableSection
-				title={t("transactionsPage.title")}
+				title={t("title")}
 				transfers={paginatedTransfers}
-				emptyTitle={t("transactionsPage.emptyTitle")}
-				emptyDescription={t("transactionsPage.emptyDescription")}
+				emptyTitle={t("emptyTitle")}
+				emptyDescription={t("emptyDescription")}
 				headerAction={
-					<Button type="button" variant="ghost" onClick={openTransferModal}>
-						{t("transactionsPage.newTransfer")}
+					<Button
+						type="button"
+						variant="ghost"
+						onClick={() => openTransferModal()}
+					>
+						{t("newTransfer")}
 					</Button>
 				}
 			/>

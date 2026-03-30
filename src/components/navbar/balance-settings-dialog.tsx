@@ -24,7 +24,7 @@ type BalanceSettingsFormValues = {
 };
 
 export const BalanceSettingsDialog = () => {
-	const { t } = useTranslation();
+	const { t } = useTranslation(["balanceSettings", "common"]);
 	const { i18nLanguage } = useAppLanguage();
 	const balance = useAuthStore((state) => state.balance);
 	const setBalance = useAuthStore((state) => state.setBalance);
@@ -43,11 +43,11 @@ export const BalanceSettingsDialog = () => {
 				balance: z
 					.custom<number>(
 						(value) => typeof value === "number" && Number.isFinite(value),
-						t("balanceSettings.validation.invalid"),
+						t("validation.invalid", { ns: "balanceSettings" }),
 					)
 					.refine(
 						(value) => value >= 0,
-						t("balanceSettings.validation.nonNegative"),
+						t("validation.nonNegative", { ns: "balanceSettings" }),
 					),
 			}),
 		[t],
@@ -71,8 +71,9 @@ export const BalanceSettingsDialog = () => {
 
 	const handleSubmit = form.handleSubmit((data) => {
 		setBalance(data.balance);
-		toast.success(t("balanceSettings.toastTitle"), {
-			description: t("balanceSettings.toastDescription", {
+		toast.success(t("toastTitle", { ns: "balanceSettings" }), {
+			description: t("toastDescription", {
+				ns: "balanceSettings",
 				balance: formatCurrency(i18nLanguage, data.balance),
 			}),
 		});
@@ -84,15 +85,17 @@ export const BalanceSettingsDialog = () => {
 			<DialogContent className="sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-semibold">
-						{t("balanceSettings.title")}
+						{t("title", { ns: "balanceSettings" })}
 					</DialogTitle>
-					<DialogDescription>{t("balanceSettings.description")}</DialogDescription>
+					<DialogDescription>
+						{t("description", { ns: "balanceSettings" })}
+					</DialogDescription>
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className="space-y-5" noValidate>
 					<div className="rounded-2xl border bg-muted/20 p-4">
 						<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-							{t("balanceSettings.currentBalance")}
+							{t("currentBalance", { ns: "balanceSettings" })}
 						</p>
 						<p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
 							{formatCurrency(i18nLanguage, balance)}
@@ -102,10 +105,10 @@ export const BalanceSettingsDialog = () => {
 					<FormFieldNumber
 						control={form.control}
 						name="balance"
-						label={t("balanceSettings.newBalance")}
+						label={t("newBalance", { ns: "balanceSettings" })}
 						placeholder={formatCurrency(i18nLanguage, 0)}
 						minValue={0}
-						step={0.01}
+						step={1}
 						formatOptions={{
 							style: "currency",
 							currency: "BRL",
@@ -123,10 +126,10 @@ export const BalanceSettingsDialog = () => {
 							variant="outline"
 							onClick={closeBalanceSettings}
 						>
-							{t("common.cancel")}
+							{t("cancel", { ns: "common" })}
 						</Button>
 						<Button type="submit" disabled={form.formState.isSubmitting}>
-							{t("balanceSettings.save")}
+							{t("save", { ns: "balanceSettings" })}
 						</Button>
 					</DialogFooter>
 				</form>

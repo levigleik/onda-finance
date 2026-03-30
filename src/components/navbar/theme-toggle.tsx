@@ -12,14 +12,12 @@ import {
 import { useTheme } from "@/providers/theme-provider.tsx";
 
 export function ThemeToggle() {
-	const { t } = useTranslation();
+	const { t } = useTranslation("theme");
 	const { toggleTheme, theme } = useTheme();
 	const [mounted, setMounted] = React.useState(false);
 
 	const isDark = theme === "dark";
-	const label = isDark
-		? t("theme.switchToLight")
-		: t("theme.switchToDark");
+	const label = isDark ? t("switchToLight") : t("switchToDark");
 
 	React.useEffect(() => {
 		setMounted(true);

@@ -17,15 +17,15 @@ type LoginFormInputs = {
 };
 
 export function LoginForm() {
-	const { t } = useTranslation();
+	const { t } = useTranslation("auth");
 	const navigate = useNavigate();
 	const { routeLanguage } = useAppLanguage();
 	const login = useAuthStore((state) => state.login);
 	const loginSchema = useMemo(
 		() =>
 			z.object({
-				email: z.email(t("auth.validation.invalidEmail")),
-				password: z.string().min(6, t("auth.validation.passwordMin")),
+				email: z.email(t("validation.invalidEmail")),
+				password: z.string().min(6, t("validation.passwordMin")),
 			}),
 		[t],
 	);
@@ -41,7 +41,7 @@ export function LoginForm() {
 	const onSubmit = async (data: LoginFormInputs) => {
 		await new Promise((resolve) => setTimeout(resolve, 800));
 
-		login({ name: t("auth.demoUserName"), email: data.email });
+		login({ name: t("demoUserName"), email: data.email });
 		navigate(buildLocalizedPath(routeLanguage));
 	};
 
@@ -54,18 +54,18 @@ export function LoginForm() {
 			<FormFieldText
 				control={form.control}
 				name="email"
-				label={t("auth.emailLabel")}
+				label={t("emailLabel")}
 				type="email"
-				placeholder={t("auth.emailPlaceholder")}
+				placeholder={t("emailPlaceholder")}
 				autoComplete="email"
 			/>
 
 			<FormFieldText
 				control={form.control}
 				name="password"
-				label={t("auth.passwordLabel")}
+				label={t("passwordLabel")}
 				type="password"
-				placeholder={t("auth.passwordPlaceholder")}
+				placeholder={t("passwordPlaceholder")}
 				autoComplete="current-password"
 			/>
 
@@ -75,8 +75,8 @@ export function LoginForm() {
 				className="w-full"
 			>
 				{form.formState.isSubmitting
-					? t("auth.submitting")
-					: t("auth.submit")}
+					? t("submitting")
+					: t("submit")}
 			</Button>
 		</form>
 	);

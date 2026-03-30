@@ -37,11 +37,11 @@ const formatTransferDate = (
 	});
 
 	if (status === "scheduled") {
-		return t("transfers.table.scheduledFor", { date: shortDate });
+		return t("table.scheduledFor", { date: shortDate });
 	}
 
 	if (isSameDay(date, today)) {
-		return t("transfers.table.todayAt", { time });
+		return t("table.todayAt", { time });
 	}
 
 	return `${shortDate}, ${time}`;
@@ -62,7 +62,7 @@ export const TransfersTableSection = ({
 	emptyDescription,
 	headerAction,
 }: TransfersTableSectionProps) => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("transfers");
 	const { i18nLanguage } = useAppLanguage();
 	const openTransferModal = useTransferModalStore(
 		(state) => state.openTransferModal,
@@ -81,16 +81,16 @@ export const TransfersTableSection = ({
 						<thead>
 							<tr className="bg-muted/55">
 								<th className="px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									{t("transfers.table.details")}
+									{t("table.details")}
 								</th>
 								<th className="px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									{t("transfers.table.category")}
+									{t("table.category")}
 								</th>
 								<th className="px-8 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									{t("transfers.table.date")}
+									{t("table.date")}
 								</th>
 								<th className="px-8 py-4 text-right text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-									{t("transfers.table.amount")}
+									{t("table.amount")}
 								</th>
 							</tr>
 						</thead>
@@ -111,8 +111,11 @@ export const TransfersTableSection = ({
 													{emptyDescription}
 												</p>
 											</div>
-											<Button type="button" onClick={openTransferModal}>
-												{t("transfers.create")}
+											<Button
+												type="button"
+												onClick={() => openTransferModal()}
+											>
+												{t("create")}
 											</Button>
 										</div>
 									</td>
@@ -160,8 +163,8 @@ export const TransfersTableSection = ({
 												)}
 											>
 												{transfer.status === "scheduled"
-													? t("transfers.table.scheduled")
-													: t("transfers.table.completed")}
+													? t("table.scheduled")
+													: t("table.completed")}
 											</span>
 										</td>
 

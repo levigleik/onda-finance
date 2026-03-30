@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
-	const { t } = useTranslation();
+	const { t } = useTranslation("pagination");
 
 	return (
 		<nav
 			role="navigation"
-			aria-label={t("pagination.navigation")}
+			aria-label={t("navigation")}
 			data-slot="pagination"
 			className={cn("mx-auto flex w-full justify-center", className)}
 			{...props}
@@ -68,17 +68,17 @@ function PaginationPrevious({
 	text,
 	...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
-	const { t } = useTranslation();
+	const { t } = useTranslation("pagination");
 
 	return (
 		<PaginationLink
-			aria-label={t("pagination.previousAriaLabel")}
+			aria-label={t("previousAriaLabel")}
 			size="default"
 			className={cn("pl-2!", className)}
 			{...props}
 		>
 			<ChevronLeftIcon data-icon="inline-start" />
-			<span className="hidden sm:block">{text ?? t("pagination.previous")}</span>
+			<span className="hidden sm:block">{text ?? t("previous")}</span>
 		</PaginationLink>
 	);
 }
@@ -88,16 +88,16 @@ function PaginationNext({
 	text,
 	...props
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
-	const { t } = useTranslation();
+	const { t } = useTranslation("pagination");
 
 	return (
 		<PaginationLink
-			aria-label={t("pagination.nextAriaLabel")}
+			aria-label={t("nextAriaLabel")}
 			size="default"
 			className={cn("pr-2!", className)}
 			{...props}
 		>
-			<span className="hidden sm:block">{text ?? t("pagination.next")}</span>
+			<span className="hidden sm:block">{text ?? t("next")}</span>
 			<ChevronRightIcon data-icon="inline-end" />
 		</PaginationLink>
 	);
@@ -107,7 +107,7 @@ function PaginationEllipsis({
 	className,
 	...props
 }: React.ComponentProps<"span">) {
-	const { t } = useTranslation();
+	const { t } = useTranslation("pagination");
 
 	return (
 		<span
@@ -120,7 +120,7 @@ function PaginationEllipsis({
 			{...props}
 		>
 			<MoreHorizontalIcon />
-			<span className="sr-only">{t("pagination.morePages")}</span>
+			<span className="sr-only">{t("morePages")}</span>
 		</span>
 	);
 }

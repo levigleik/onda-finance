@@ -4,6 +4,11 @@ import i18n from "@/i18n";
 import { renderAppRouter, seedAuthenticatedSession } from "@/test/render-utils";
 import { useTransfersStore } from "@/stores/transfers-store";
 
+const tLanguage = (key: string, options?: Record<string, unknown>) =>
+	i18n.t(key, { ns: "language", ...options });
+const tTransactionsPage = (key: string, options?: Record<string, unknown>) =>
+	i18n.t(key, { ns: "transactionsPage", ...options });
+
 describe("i18n routing", () => {
 	it("redireciona a raiz para /pt-br", async () => {
 		seedAuthenticatedSession();
@@ -38,13 +43,13 @@ describe("i18n routing", () => {
 
 		expect(
 			await screen.findByRole("heading", {
-				name: i18n.t("transactionsPage.title"),
+				name: tTransactionsPage("title"),
 			}),
 		).toBeInTheDocument();
 
 		await user.click(
 			screen.getByRole("button", {
-				name: i18n.t("language.openMenu"),
+				name: tLanguage("openMenu"),
 			}),
 		);
 		await user.click(

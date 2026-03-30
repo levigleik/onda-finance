@@ -1,15 +1,42 @@
 import { create } from "zustand";
 
+export interface TransferModalRecipientPreset {
+	name: string;
+	email: string;
+	document?: string;
+}
+
+export type TransferModalInitialStep = 1 | 2;
+
+interface OpenTransferModalOptions {
+	recipientPreset?: TransferModalRecipientPreset;
+	initialStep?: TransferModalInitialStep;
+}
+
 interface TransferModalState {
 	isTransferModalOpen: boolean;
-	openTransferModal: () => void;
+	recipientPreset: TransferModalRecipientPreset | null;
+	initialStep: TransferModalInitialStep;
+	openTransferModal: (options?: OpenTransferModalOptions) => void;
 	closeTransferModal: () => void;
 	setTransferModalOpen: (open: boolean) => void;
 }
 
-export const useTransferModalStore = create<TransferModalState>()((set) => ({
+const defaultTransferModalState = {
 	isTransferModalOpen: false,
-	openTransferModal: () => set({ isTransferModalOpen: true }),
-	closeTransferModal: () => set({ isTransferModalOpen: false }),
-	setTransferModalOpen: (open) => set({ isTransferModalOpen: open }),
+	recipientPreset: null,
+	initialStep: 1 as const,
+};
+
+export const useTransferModalStore = create<TransferModalState>()((set) => ({
+	...defaultTransferModalState,
+	openTransferModal: (options) =>
+		set({
+			isTransferModalOpen: true,
+			recipientPreset: options?.recipientPreset ?? null,
+			initialStep: options?.initialStep ?? 1,
+		}),
+	closeTransferModal: () => set(defaultTransferModalState),
+	setTransferModalOpen: (open) =>
+		set(open ? { isTransferModalOpen: true } : defaultTransferModalState),
 }));

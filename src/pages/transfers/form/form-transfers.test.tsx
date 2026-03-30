@@ -15,7 +15,13 @@ import {
 } from "@/test/transfer-test-helpers";
 import { renderFormTransfers } from "@/test/render-utils";
 import { useAuthStore } from "@/stores/auth-store";
-import { useTransfersStore } from "@/stores/transfers-store";
+import {
+	DEFAULT_TRANSFER_SEED,
+	useTransfersStore,
+} from "@/stores/transfers-store";
+
+const tTransfers = (key: string, options?: Record<string, unknown>) =>
+	i18n.t(key, { ns: "transfers", ...options });
 
 describe("FormTransfers", () => {
 	it("não avança da etapa 1 com destinatário inválido e exibe os erros esperados", async () => {
@@ -24,35 +30,35 @@ describe("FormTransfers", () => {
 		renderFormTransfers();
 
 		await user.type(
-			screen.getByLabelText(i18n.t("transfers.step1.recipientName")),
+			screen.getByLabelText(tTransfers("step1.recipientName")),
 			"Ma",
 		);
 		await user.type(
-			screen.getByLabelText(i18n.t("transfers.step1.recipientEmail")),
+			screen.getByLabelText(tTransfers("step1.recipientEmail")),
 			"email",
 		);
 		await user.type(
-			screen.getByLabelText(i18n.t("transfers.step1.recipientDocument")),
+			screen.getByLabelText(tTransfers("step1.recipientDocument")),
 			"11111111111",
 		);
 		await user.click(
 			screen.getByRole("button", {
-				name: i18n.t("transfers.step1.continue"),
+				name: tTransfers("step1.continue"),
 			}),
 		);
 
 		expect(
-			screen.getByText(i18n.t("transfers.validation.recipientName")),
+			screen.getByText(tTransfers("validation.recipientName")),
 		).toBeInTheDocument();
 		expect(
-			screen.getByText(i18n.t("transfers.validation.recipientEmail")),
+			screen.getByText(tTransfers("validation.recipientEmail")),
 		).toBeInTheDocument();
 		expect(
-			screen.getByText(i18n.t("transfers.validation.recipientDocument")),
+			screen.getByText(tTransfers("validation.recipientDocument")),
 		).toBeInTheDocument();
 		expect(
 			screen.queryByRole("heading", {
-				name: i18n.t("transfers.step2.title"),
+				name: tTransfers("step2.title"),
 			}),
 		).not.toBeInTheDocument();
 	});
@@ -66,7 +72,7 @@ describe("FormTransfers", () => {
 		await fillRecipientStep(user);
 		expect(
 			screen.getByRole("heading", {
-				name: i18n.t("transfers.step2.title"),
+				name: tTransfers("step2.title"),
 			}),
 		).toBeInTheDocument();
 
@@ -85,16 +91,36 @@ describe("FormTransfers", () => {
 		});
 		expect(createdTransfer.amount).toBe(TEST_TRANSFER_AMOUNT);
 		expect(createdTransfer.description).toBe(TEST_TRANSFER_DESCRIPTION);
+		expect(useTransfersStore.getState().transfers).toHaveLength(
+			DEFAULT_TRANSFER_SEED.length + 1,
+		);
 		expect(useAuthStore.getState().balance).toBe(TEST_UPDATED_BALANCE);
 		expect(onSuccess).toHaveBeenCalledTimes(1);
 		expect(
 			screen.getByRole("heading", {
-				name: i18n.t("transfers.step1.title"),
+				name: tTransfers("step1.title"),
 			}),
 		).toBeInTheDocument();
 		expect(
-			screen.getByLabelText(i18n.t("transfers.step1.recipientName")),
+			screen.getByLabelText(tTransfers("step1.recipientName")),
 		).toHaveValue("");
+	});
+
+	it("não exibe o erro de valor ao abrir a etapa 2 antes da interação", async () => {
+		const user = createUser();
+
+		renderFormTransfers();
+
+		await fillRecipientStep(user);
+
+		expect(
+			screen.getByRole("heading", {
+				name: tTransfers("step2.title"),
+			}),
+		).toBeInTheDocument();
+		expect(
+			screen.queryByText(tTransfers("validation.amountRequired")),
+		).not.toBeInTheDocument();
 	});
 
 	it("bloqueia o submit se o saldo cair entre o preenchimento e a submissão", async () => {
@@ -110,7 +136,7 @@ describe("FormTransfers", () => {
 		await fillTransferDetailsStep(user);
 
 		const submitButton = screen.getByRole("button", {
-			name: i18n.t("transfers.step2.confirm"),
+			name: tTransfers("step2.confirm"),
 		});
 		const form = submitButton.closest("form");
 
@@ -125,7 +151,8 @@ describe("FormTransfers", () => {
 		const amountError = await screen.findByRole("alert");
 		expect(amountError.textContent?.replace(/\s+/g, " ").trim()).toBe(
 			i18n
-				.t("transfers.validation.insufficientBalance", {
+				.t("validation.insufficientBalance", {
+					ns: "transfers",
 					balance: new Intl.NumberFormat("pt-BR", {
 						style: "currency",
 						currency: "BRL",
@@ -134,7 +161,9 @@ describe("FormTransfers", () => {
 				.replace(/\s+/g, " ")
 				.trim(),
 		);
-		expect(useTransfersStore.getState().transfers).toHaveLength(0);
+		expect(useTransfersStore.getState().transfers).toHaveLength(
+			DEFAULT_TRANSFER_SEED.length,
+		);
 		expect(useAuthStore.getState().balance).toBe(1_000);
 		expect(onSuccess).not.toHaveBeenCalled();
 	});
@@ -155,10 +184,13 @@ describe("FormTransfers", () => {
 		expect(createdTransfer.status).toBe("scheduled");
 		expect(createdTransfer.transferDate).toBe(TEST_SCHEDULED_DATE);
 		expect(createdTransfer.amount).toBe(TEST_TRANSFER_AMOUNT);
+		expect(useTransfersStore.getState().transfers).toHaveLength(
+			DEFAULT_TRANSFER_SEED.length + 1,
+		);
 		expect(useAuthStore.getState().balance).toBe(TEST_UPDATED_BALANCE);
 		expect(
 			screen.getByRole("heading", {
-				name: i18n.t("transfers.step1.title"),
+				name: tTransfers("step1.title"),
 			}),
 		).toBeInTheDocument();
 	});

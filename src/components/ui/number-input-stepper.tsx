@@ -38,7 +38,7 @@ export default function NumberInputStepper({
 	inputProps,
 	...props
 }: NumberInputStepperProps) {
-	const { t } = useTranslation();
+	const { t } = useTranslation("form");
 	const [value, setValue] = useControllableState({
 		prop: controlledValue,
 		defaultProp: defaultValue,
@@ -47,7 +47,7 @@ export default function NumberInputStepper({
 
 	return (
 		<NumberField
-			aria-label={ariaLabel ?? t("form.numberFieldAriaLabel")}
+			aria-label={ariaLabel ?? t("numberFieldAriaLabel")}
 			value={value}
 			onChange={setValue}
 			minValue={minValue}

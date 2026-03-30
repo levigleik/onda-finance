@@ -5,6 +5,22 @@ export const LANGUAGE_ROUTE_ID = "language";
 export const DEFAULT_ROUTE_LANGUAGE = "pt-br";
 export const DEFAULT_LANGUAGE = "pt-BR";
 export const DEFAULT_NAMESPACE = "common";
+export const TRANSLATION_NAMESPACES = [
+	"app",
+	"auth",
+	"balanceSettings",
+	"common",
+	"dashboard",
+	"errorBoundary",
+	"form",
+	"language",
+	"nav",
+	"pagination",
+	"theme",
+	"transactionsPage",
+	"transfers",
+	"userMenu",
+] as const;
 export const APP_CURRENCY = "BRL";
 
 export const ROUTE_LANGUAGE_TO_I18N = {
@@ -24,6 +40,7 @@ const DATE_FNS_LOCALES = {
 
 export type RouteLanguage = keyof typeof ROUTE_LANGUAGE_TO_I18N;
 export type AppLanguage = (typeof ROUTE_LANGUAGE_TO_I18N)[RouteLanguage];
+export type TranslationNamespace = (typeof TRANSLATION_NAMESPACES)[number];
 
 export const SUPPORTED_ROUTE_LANGUAGES = Object.keys(
 	ROUTE_LANGUAGE_TO_I18N,

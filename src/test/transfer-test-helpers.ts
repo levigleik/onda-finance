@@ -8,9 +8,12 @@ import {
 	TEST_TRANSFER_FIXTURE,
 } from "@/test/fixtures/transfers";
 
+const tTransfers = (key: string, options?: Record<string, unknown>) =>
+	i18n.t(key, { ns: "transfers", ...options });
+
 const getAmountInput = () =>
 	screen.getByRole("textbox", {
-		name: i18n.t("transfers.step2.transferAmount"),
+		name: tTransfers("step2.transferAmount"),
 	}) as HTMLInputElement;
 
 const getScheduledDateButton = async () => {
@@ -34,15 +37,15 @@ export const fillRecipientStep = async (
 	overrides?: Partial<typeof TEST_TRANSFER_FIXTURE>,
 ) => {
 	await user.type(
-		screen.getByLabelText(i18n.t("transfers.step1.recipientName")),
+		screen.getByLabelText(tTransfers("step1.recipientName")),
 		overrides?.recipientName ?? TEST_TRANSFER_FIXTURE.recipientName,
 	);
 	await user.type(
-		screen.getByLabelText(i18n.t("transfers.step1.recipientEmail")),
+		screen.getByLabelText(tTransfers("step1.recipientEmail")),
 		overrides?.recipientEmail ?? TEST_TRANSFER_FIXTURE.recipientEmail,
 	);
 	await user.type(
-		screen.getByLabelText(i18n.t("transfers.step1.recipientDocument")),
+		screen.getByLabelText(tTransfers("step1.recipientDocument")),
 		(overrides?.recipientDocument ?? TEST_TRANSFER_FIXTURE.recipientDocument).replace(
 			/\D/g,
 			"",
@@ -50,7 +53,7 @@ export const fillRecipientStep = async (
 	);
 	await user.click(
 		screen.getByRole("button", {
-			name: i18n.t("transfers.step1.continue"),
+			name: tTransfers("step1.continue"),
 		}),
 	);
 };
@@ -73,7 +76,7 @@ export const fillTransferDetailsStep = async (
 		await act(async () => {
 			fireEvent.click(
 				screen.getByRole("button", {
-					name: new RegExp(i18n.t("transfers.step2.schedule"), "i"),
+					name: new RegExp(tTransfers("step2.schedule"), "i"),
 				}),
 			);
 		});
@@ -96,7 +99,7 @@ export const fillTransferDetailsStep = async (
 
 	if (description !== undefined) {
 		await user.type(
-			screen.getByLabelText(i18n.t("transfers.step2.descriptionLabel")),
+			screen.getByLabelText(tTransfers("step2.descriptionLabel")),
 			description,
 		);
 	}
@@ -104,7 +107,7 @@ export const fillTransferDetailsStep = async (
 
 export const submitTransfer = async () => {
 	const submitButton = screen.getByRole("button", {
-		name: i18n.t("transfers.step2.confirm"),
+		name: tTransfers("step2.confirm"),
 	});
 	const form = submitButton.closest("form");
 

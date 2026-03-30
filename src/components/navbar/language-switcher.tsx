@@ -21,7 +21,7 @@ import { useAppLanguage } from "@/i18n/use-app-language";
 const LANGUAGE_OPTIONS = Object.keys(I18N_LANGUAGE_TO_ROUTE) as AppLanguage[];
 
 export const LanguageSwitcher = () => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("language");
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { i18nLanguage } = useAppLanguage();
@@ -33,7 +33,7 @@ export const LanguageSwitcher = () => {
 					type="button"
 					variant="ghost"
 					className="rounded-full gap-2 px-3"
-					aria-label={t("language.openMenu")}
+					aria-label={t("openMenu")}
 				>
 					<Languages className="h-4 w-4" />
 					<span className="text-xs font-semibold uppercase tracking-[0.18em]">
@@ -42,7 +42,7 @@ export const LanguageSwitcher = () => {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-64">
-				<DropdownMenuLabel>{t("language.label")}</DropdownMenuLabel>
+				<DropdownMenuLabel>{t("label")}</DropdownMenuLabel>
 				<DropdownMenuRadioGroup
 					value={i18nLanguage}
 					onValueChange={(nextLanguage) => {
@@ -59,7 +59,7 @@ export const LanguageSwitcher = () => {
 				>
 					{LANGUAGE_OPTIONS.map((language) => (
 						<DropdownMenuRadioItem key={language} value={language}>
-							{t(`language.options.${language}`)}
+							{t(`options.${language}`)}
 						</DropdownMenuRadioItem>
 					))}
 				</DropdownMenuRadioGroup>

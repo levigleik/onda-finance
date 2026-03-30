@@ -6,6 +6,7 @@ import {
 	DEFAULT_NAMESPACE,
 	type AppLanguage,
 	SUPPORTED_LANGUAGES,
+	TRANSLATION_NAMESPACES,
 } from "@/i18n/config";
 
 const translationModules = import.meta.glob<{ default: ResourceLanguage }>(
@@ -34,7 +35,7 @@ export const i18nInitializationPromise = i18n
 		lng: DEFAULT_LANGUAGE,
 		fallbackLng: DEFAULT_LANGUAGE,
 		defaultNS: DEFAULT_NAMESPACE,
-		ns: [DEFAULT_NAMESPACE],
+		ns: [...TRANSLATION_NAMESPACES],
 		supportedLngs: SUPPORTED_LANGUAGES,
 		load: "currentOnly",
 		interpolation: {

@@ -29,12 +29,12 @@ const getErrorMessage = (
 };
 
 export const AppErrorBoundary = () => {
-	const { t } = useTranslation();
+	const { t } = useTranslation("errorBoundary");
 	const { routeLanguage } = useLanguageRouteData();
 	const error = useRouteError();
 	const errorMessage = getErrorMessage(error, {
-		fallbackMessage: t("errorBoundary.fallbackMessage"),
-		unexpectedMessage: t("errorBoundary.unexpected"),
+		fallbackMessage: t("fallbackMessage"),
+		unexpectedMessage: t("unexpected"),
 	});
 
 	const handleGoHomeWithReload = () => {
@@ -50,19 +50,19 @@ export const AppErrorBoundary = () => {
 
 				<div className="mt-6 space-y-3">
 					<p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-						{t("errorBoundary.eyebrow")}
+						{t("eyebrow")}
 					</p>
 					<h1 className="text-2xl font-semibold tracking-tight text-foreground">
-						{t("errorBoundary.title")}
+						{t("title")}
 					</h1>
 					<p className="text-sm leading-6 text-muted-foreground">
-						{t("errorBoundary.description")}
+						{t("description")}
 					</p>
 				</div>
 
 				<div className="mt-6 rounded-lg border bg-muted/20 px-4 py-3 text-left">
 					<p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-						{t("errorBoundary.details")}
+						{t("details")}
 					</p>
 					<p className="mt-2 break-words text-sm text-foreground">
 						{errorMessage}
@@ -76,7 +76,7 @@ export const AppErrorBoundary = () => {
 					onClick={handleGoHomeWithReload}
 				>
 					<Home className="mr-2 h-4 w-4" />
-					{t("errorBoundary.goHome")}
+					{t("goHome")}
 				</Button>
 			</div>
 		</div>

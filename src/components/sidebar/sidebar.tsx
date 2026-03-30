@@ -10,7 +10,13 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
 	buildLocalizedPath,
 	stripLanguageFromPath,
@@ -22,13 +28,15 @@ import { useTransferModalStore } from "@/stores/transfer-modal-store";
 import { navItems } from "./nav-items";
 
 export const AppSidebar = () => {
-	const { t } = useTranslation();
+	const { t } = useTranslation(["app", "nav"]);
 	const location = useLocation();
 	const { routeLanguage } = useAppLanguage();
+	const { isMobile, state } = useSidebar();
 	const openTransferModal = useTransferModalStore(
 		(state) => state.openTransferModal,
 	);
 	const currentPath = stripLanguageFromPath(location.pathname);
+	const isCollapsed = state === "collapsed" && !isMobile;
 
 	return (
 		<Sidebar collapsible="icon">
@@ -70,7 +78,7 @@ export const AppSidebar = () => {
 										"group-data-[collapsible=icon]:max-w-0",
 									)}
 								>
-									{t("app.name")}
+									{t("name", { ns: "app" })}
 								</span>
 							</div>
 						</Link>
@@ -88,13 +96,13 @@ export const AppSidebar = () => {
 								"group-data-[collapsible=icon]:max-h-0",
 							)}
 						>
-							{t("app.tagline")}
+							{t("tagline", { ns: "app" })}
 						</span>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
 
-			<SidebarContent className="p-4 group-data-[collapsible=icon]:p-2">
+			<SidebarContent className="p-4 transition-[padding] duration-200 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					{navItems.map((item) => {
 						const isActive =
@@ -107,11 +115,11 @@ export const AppSidebar = () => {
 								<SidebarMenuButton
 									asChild
 									isActive={isActive}
-									tooltip={t(item.titleKey)}
+									tooltip={t(item.titleKey, { ns: "nav" })}
 								>
 									<Link to={buildLocalizedPath(routeLanguage, item.url)}>
 										<item.icon className="h-5 w-5 shrink-0" />
-										<span>{t(item.titleKey)}</span>
+										<span>{t(item.titleKey, { ns: "nav" })}</span>
 									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -123,14 +131,36 @@ export const AppSidebar = () => {
 			<SidebarFooter className="p-4 group-data-[collapsible=icon]:p-2">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<Button
-							type="button"
-							className="w-full text-lg"
-							onClick={openTransferModal}
-						>
-							<Plus className="h-5 w-5 shrink-0" />
-							<span>{t("nav.newTransfer")}</span>
-						</Button>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button
+									type="button"
+									className={cn(
+										"w-full justify-start gap-2 overflow-hidden rounded-lg text-sm font-semibold transition-[width,padding,gap] duration-200",
+										"group-data-[collapsible=icon]:size-10",
+										"group-data-[collapsible=icon]:justify-center",
+										"group-data-[collapsible=icon]:px-0",
+									)}
+									aria-label={t("newTransfer", { ns: "nav" })}
+									onClick={() => openTransferModal()}
+								>
+									<Plus className="h-5 w-5 shrink-0" />
+									<span
+										className={cn(
+											"whitespace-nowrap transition-[opacity,transform,max-width] duration-200 ease-out",
+											"max-w-40 opacity-100 translate-x-0",
+											isCollapsed &&
+												"pointer-events-none max-w-0 -translate-x-2 opacity-0",
+										)}
+									>
+										{t("newTransfer", { ns: "nav" })}
+									</span>
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent side="right" align="center" hidden={!isCollapsed}>
+								{t("newTransfer", { ns: "nav" })}
+							</TooltipContent>
+						</Tooltip>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarFooter>

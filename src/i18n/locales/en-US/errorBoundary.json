@@ -1,0 +1,9 @@
+{
+  "eyebrow": "Unexpected error",
+  "title": "Something went wrong while loading this page.",
+  "description": "We'll go back to the home page and reload the application to try to recover the state.",
+  "details": "Details",
+  "fallbackMessage": "The application could not be loaded correctly.",
+  "unexpected": "Something went wrong.",
+  "goHome": "Go home and reload"
+}
