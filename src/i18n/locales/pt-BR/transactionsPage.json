@@ -1,5 +1,9 @@
 {
   "title": "Todas as transferências",
+  "seo": {
+    "title": "Todas as transferências",
+    "description": "Consulte o histórico completo de transferências e acompanhe todos os seus envios na Onda Finance."
+  },
   "emptyTitle": "Nenhuma transferência encontrada",
   "emptyDescription": "Quando você criar novas transferências, todos os registros vão aparecer aqui nesta listagem completa.",
   "newTransfer": "Nova transferência"

@@ -17,6 +17,7 @@ import {
 	getRouteLanguage,
 	replaceLeadingSegmentWithLanguage,
 } from "@/i18n/config";
+import { RouteMetadataSync } from "@/routes/route-metadata";
 
 export interface LanguageLoaderData {
 	routeLanguage: RouteLanguage;
@@ -66,7 +67,12 @@ export const LanguageLayout = () => {
 		void i18n.changeLanguage(i18nLanguage);
 	}, [i18nLanguage]);
 
-	return <Outlet />;
+	return (
+		<>
+			<RouteMetadataSync />
+			<Outlet />
+		</>
+	);
 };
 
 export const useLanguageRouteData = (): LanguageLoaderData => {

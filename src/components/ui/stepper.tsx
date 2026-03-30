@@ -14,7 +14,6 @@ import {
 
 import { cn } from "@/lib/utils.ts";
 
-// Types
 type StepperOrientation = "horizontal" | "vertical";
 type StepState = "active" | "completed" | "inactive" | "loading";
 type StepIndicators = {
@@ -85,7 +84,6 @@ function Stepper({
 	const [activeStep, setActiveStep] = useState(defaultValue);
 	const [triggerNodes, setTriggerNodes] = useState<HTMLButtonElement[]>([]);
 
-	// Register/unregister triggers
 	const registerTrigger = useCallback((node: HTMLButtonElement | null) => {
 		setTriggerNodes((prev) => {
 			if (node && !prev.includes(node)) {
@@ -110,7 +108,6 @@ function Stepper({
 
 	const currentStep = value ?? activeStep;
 
-	// Keyboard navigation logic
 	const focusTrigger = (idx: number) => {
 		if (triggerNodes[idx]) triggerNodes[idx].focus();
 	};
@@ -121,7 +118,6 @@ function Stepper({
 	const focusFirst = () => focusTrigger(0);
 	const focusLast = () => focusTrigger(triggerNodes.length - 1);
 
-	// Context value
 	const contextValue = useMemo<StepperContextValue>(
 		() => ({
 			activeStep: currentStep,
@@ -243,7 +239,6 @@ function StepperTrigger({
 	const id = `stepper-tab-${step}`;
 	const panelId = `stepper-panel-${step}`;
 
-	// Register this trigger for keyboard navigation
 	const btnRef = useRef<HTMLButtonElement>(null);
 	useEffect(() => {
 		if (btnRef.current) {
@@ -251,7 +246,6 @@ function StepperTrigger({
 		}
 	}, [btnRef.current]);
 
-	// Find our index among triggers for navigation
 	const myIdx = useMemo(
 		() =>
 			triggerNodes.findIndex((n: HTMLButtonElement) => n === btnRef.current),

@@ -27,7 +27,7 @@ export function ThemeToggle() {
 		return (
 			<Button
 				variant="ghost"
-				className="rounded-full disabled:opacity-100" // para não renderizar com opacity menor
+				className="rounded-full disabled:opacity-100"
 				size="icon"
 				disabled
 			>

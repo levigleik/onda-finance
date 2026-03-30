@@ -1,4 +1,8 @@
 {
+  "seo": {
+    "title": "Dashboard",
+    "description": "Track your balance, frequent contacts, and latest transfers in your Onda Finance account."
+  },
   "currentBalance": "Current balance",
   "monthlyYield": "Monthly yield",
   "frequentContacts": "Frequent contacts",

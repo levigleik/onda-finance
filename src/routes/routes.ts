@@ -17,6 +17,7 @@ import { TransactionsPage } from "@/pages/transactions/transactions-page.tsx";
 import { AppErrorBoundary } from "@/routes/app-error-boundary";
 import { requireAuthLoader, requireGuestLoader } from "@/routes/guards.ts";
 import { LanguageLayout, languageLoader } from "@/routes/language";
+import type { AppRouteHandle } from "@/routes/route-metadata";
 
 const redirectWithPathname = (
 	pathname: string,
@@ -57,15 +58,47 @@ export const appRoutes = [
 				Component: RootLayout,
 				loader: requireAuthLoader,
 				children: [
-					{ index: true, Component: DashboardPage },
-					{ path: "transactions", Component: TransactionsPage },
+					{
+						index: true,
+						Component: DashboardPage,
+						handle: {
+							meta: {
+								namespace: "dashboard",
+								titleKey: "seo.title",
+								descriptionKey: "seo.description",
+							},
+						} satisfies AppRouteHandle,
+					},
+					{
+						path: "transactions",
+						Component: TransactionsPage,
+						handle: {
+							meta: {
+								namespace: "transactionsPage",
+								titleKey: "seo.title",
+								descriptionKey: "seo.description",
+							},
+						} satisfies AppRouteHandle,
+					},
 				],
 			},
 			{
 				path: "",
 				Component: AuthLayout,
 				loader: requireGuestLoader,
-				children: [{ path: "login", Component: LoginPage }],
+				children: [
+					{
+						path: "login",
+						Component: LoginPage,
+						handle: {
+							meta: {
+								namespace: "auth",
+								titleKey: "seo.title",
+								descriptionKey: "seo.description",
+							},
+						} satisfies AppRouteHandle,
+					},
+				],
 			},
 		],
 	},

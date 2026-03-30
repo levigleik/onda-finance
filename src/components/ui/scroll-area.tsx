@@ -17,11 +17,6 @@ const ScrollArea = React.forwardRef<
 	React.ComponentRef<typeof ScrollAreaPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> & {
 		viewportClassName?: string;
-		/**
-		 * `maskHeight` is the height of the mask in pixels.
-		 * pass `0` to disable the mask
-		 * @default 30
-		 */
 		maskHeight?: number;
 		maskClassName?: string;
 	}
@@ -82,8 +77,6 @@ const ScrollArea = React.forwardRef<
 
 			element.addEventListener("scroll", checkScrollability, { signal });
 			window.addEventListener("resize", checkScrollability, { signal });
-
-			// Run an initial check whenever dependencies change (including pointer mode)
 			checkScrollability();
 
 			return () => {

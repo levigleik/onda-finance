@@ -31,6 +31,22 @@ const getDialogOverlay = () => {
 };
 
 describe("TransferDialog", () => {
+	it("aplica as classes de animacao padronizadas no overlay e no content do modal", async () => {
+		renderOpenTransferDialog();
+
+		expect(await screen.findByRole("dialog")).toBeInTheDocument();
+
+		const overlay = getDialogOverlay();
+		const dialogContent = document.querySelector(
+			"[data-slot='dialog-content']",
+		) as HTMLElement | null;
+
+		expect(overlay).toHaveClass("duration-200");
+		expect(dialogContent).not.toBeNull();
+		expect(dialogContent).toHaveClass("duration-200");
+		expect(dialogContent).toHaveClass("data-open:zoom-in-95");
+	});
+
 	it("fecha ao clicar fora quando o formulário ainda não está pronto para envio", async () => {
 		const user = createUser();
 

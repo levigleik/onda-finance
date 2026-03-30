@@ -1,8 +1,8 @@
-import { redirect, type LoaderFunctionArgs } from "react-router";
+import { type LoaderFunctionArgs, redirect } from "react-router";
 import {
 	buildLocalizedPath,
-	getRouteLanguage,
 	DEFAULT_ROUTE_LANGUAGE,
+	getRouteLanguage,
 } from "@/i18n/config";
 import { useAuthStore } from "@/stores/auth-store";
 
@@ -16,8 +16,6 @@ export const requireAuthLoader = ({ params }: LoaderFunctionArgs) => {
 	if (!isAuthenticated) {
 		return redirect(buildLocalizedPath(routeLanguage, "/login"));
 	}
-
-	// Lógica de autenticação com uma api mesmo
 
 	return null;
 };

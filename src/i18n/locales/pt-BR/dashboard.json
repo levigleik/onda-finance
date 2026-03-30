@@ -1,4 +1,8 @@
 {
+  "seo": {
+    "title": "Dashboard",
+    "description": "Acompanhe saldo, contatos frequentes e últimas transferências da sua conta Onda Finance."
+  },
   "currentBalance": "Saldo atual",
   "monthlyYield": "Rendimento mensal",
   "frequentContacts": "Contatos frequentes",

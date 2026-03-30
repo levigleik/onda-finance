@@ -1,4 +1,8 @@
 {
   "name": "Onda Finance",
-  "tagline": "Private Banking"
+  "tagline": "Private Banking",
+  "seo": {
+    "defaultDescription": "Banking platform to track balance, transfers, and localized navigation in a modern financial experience.",
+    "ogSiteName": "Onda Finance"
+  }
 }
