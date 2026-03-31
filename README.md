@@ -6,8 +6,9 @@ Aplicação web desenvolvida para o desafio Front-End da Onda Finance, simulando
 
 O projeto utiliza a stack obrigatória do desafio.
 
-Bibliotecas e decisões complementares relevantes:
+Ferramentas, bibliotecas e decisões complementares relevantes:
 
+- `Docker` como stack complementar para build e execução isolada da aplicação
 - `i18next` + `react-i18next` para i18n
 - `react-router` em modo DATA para sincronizar idioma com a URL
 - `Testing Library` para testes de comportamento da interface
@@ -17,6 +18,7 @@ Bibliotecas e decisões complementares relevantes:
 ### Pré-requisitos
 
 - Bun 1.3+ instalado
+- Docker 24+ instalado (opcional)
 
 ### Instalação
 
@@ -27,19 +29,7 @@ bun install
 ### Desenvolvimento
 
 ```bash
-bun run dev
-```
-
-### Build
-
-```bash
-bun run build
-```
-
-### Preview da build
-
-```bash
-bun run preview
+bun dev
 ```
 
 ### Testes
@@ -48,11 +38,26 @@ bun run preview
 bun run test
 ```
 
-### Testes em modo watch
+### Docker
 
 ```bash
-bun run test:watch
+docker build -t onda-fin .
+docker run --rm -p 3000:3000 onda-fin
 ```
+
+A aplicação ficará disponível em `http://localhost:3000`.
+
+A imagem Docker usa build multi-stage com Bun, publica apenas o `dist/` e executa com usuário não root para reduzir a superfície de ataque.
+
+## Login
+
+O login da aplicação é mockado.
+
+- Pode ser usado qualquer e-mail válido.
+- A senha pode ser qualquer valor com 6 dígitos ou mais.
+- Exemplo de acesso:
+  - E-mail: `onda@finance.com`
+  - Senha: `123456`
 
 ## Decisões técnicas adotadas
 

@@ -6,6 +6,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
+		"docker-build": "docker build -t onda-fin .",
+		"docker-run": "docker run --rm -p 3000:3000 onda-fin",
 		"lint": "eslint .",
 		"preview": "vite preview",
 		"test": "vitest run",
