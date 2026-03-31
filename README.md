@@ -2,6 +2,14 @@
 
 Aplicação web desenvolvida para o desafio Front-End da Onda Finance, simulando um app bancário com login mockado, dashboard, histórico de transferências, fluxo de transferência em 2 etapas e internacionalização.
 
+## Deploy
+
+https://ondafinance.netlify.app
+
+## Preview
+
+[![Dashboard da aplicação](dashboard.png)](https://ondafinance.netlify.app)
+
 ## Stack
 
 O projeto utiliza a stack obrigatória do desafio.
