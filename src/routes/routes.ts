@@ -11,9 +11,6 @@ import {
 	LANGUAGE_ROUTE_ID,
 	replaceLeadingSegmentWithLanguage,
 } from "@/i18n/config";
-import { DashboardPage } from "@/pages/dashboard/dashboard-page.tsx";
-import { LoginPage } from "@/pages/login/login-page.tsx";
-import { TransactionsPage } from "@/pages/transactions/transactions-page.tsx";
 import { AppErrorBoundary } from "@/routes/app-error-boundary";
 import { requireAuthLoader, requireGuestLoader } from "@/routes/guards.ts";
 import { LanguageLayout, languageLoader } from "@/routes/language";
@@ -33,6 +30,26 @@ const redirectToDefaultLanguage = (args: LoaderFunctionArgs) =>
 
 const createLegacyRedirectLoader = (path: string) => (args: LoaderFunctionArgs) =>
 	redirectWithPathname(buildLocalizedPath(DEFAULT_ROUTE_LANGUAGE, path), args);
+
+const loadDashboardRoute = async () => {
+	const { DashboardPage } = await import("@/pages/dashboard/dashboard-page.tsx");
+
+	return { Component: DashboardPage };
+};
+
+const loadTransactionsRoute = async () => {
+	const { TransactionsPage } = await import(
+		"@/pages/transactions/transactions-page.tsx"
+	);
+
+	return { Component: TransactionsPage };
+};
+
+const loadLoginRoute = async () => {
+	const { LoginPage } = await import("@/pages/login/login-page.tsx");
+
+	return { Component: LoginPage };
+};
 
 export const appRoutes = [
 	{
@@ -60,7 +77,7 @@ export const appRoutes = [
 				children: [
 					{
 						index: true,
-						Component: DashboardPage,
+						lazy: loadDashboardRoute,
 						handle: {
 							meta: {
 								namespace: "dashboard",
@@ -71,7 +88,7 @@ export const appRoutes = [
 					},
 					{
 						path: "transactions",
-						Component: TransactionsPage,
+						lazy: loadTransactionsRoute,
 						handle: {
 							meta: {
 								namespace: "transactionsPage",
@@ -89,7 +106,7 @@ export const appRoutes = [
 				children: [
 					{
 						path: "login",
-						Component: LoginPage,
+						lazy: loadLoginRoute,
 						handle: {
 							meta: {
 								namespace: "auth",

@@ -1,9 +1,21 @@
+import { lazy, Suspense } from "react";
 import { Outlet } from "react-router";
 import { Navbar } from "@/components/navbar/navbar.tsx";
 import { AppSidebar } from "@/components/sidebar/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { TransferDialog } from "@/pages/transfers/components/transfer-dialog";
+import { useTransferModalStore } from "@/stores/transfer-modal-store";
+
+const LazyTransferDialog = lazy(async () => {
+	const module = await import("@/pages/transfers/components/transfer-dialog");
+
+	return { default: module.TransferDialog };
+});
+
 export const RootLayout = () => {
+	const isTransferModalOpen = useTransferModalStore(
+		(state) => state.isTransferModalOpen,
+	);
+
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -17,7 +29,11 @@ export const RootLayout = () => {
 					<Outlet />
 				</main>
 			</div>
-			<TransferDialog />
+			{isTransferModalOpen ? (
+				<Suspense fallback={null}>
+					<LazyTransferDialog />
+				</Suspense>
+			) : null}
 		</SidebarProvider>
 	);
 };

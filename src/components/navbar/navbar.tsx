@@ -1,16 +1,25 @@
+import { lazy, Suspense } from "react";
+import { useTranslation } from "react-i18next";
 import { Settings2 } from "lucide-react";
-import { BalanceSettingsDialog } from "@/components/navbar/balance-settings-dialog.tsx";
 import { LanguageSwitcher } from "@/components/navbar/language-switcher";
 import { ThemeToggle } from "@/components/navbar/theme-toggle.tsx";
 import { UserNav } from "@/components/navbar/user-nav.tsx";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
 import { useBalanceSettingsStore } from "@/stores/balance-settings-store";
+
+const LazyBalanceSettingsDialog = lazy(async () => {
+	const module = await import("@/components/navbar/balance-settings-dialog.tsx");
+
+	return { default: module.BalanceSettingsDialog };
+});
 
 export const Navbar = () => {
 	const { t } = useTranslation("nav");
 	const openBalanceSettings = useBalanceSettingsStore(
 		(state) => state.openBalanceSettings,
+	);
+	const isBalanceSettingsOpen = useBalanceSettingsStore(
+		(state) => state.isBalanceSettingsOpen,
 	);
 
 	return (
@@ -30,7 +39,11 @@ export const Navbar = () => {
 				<ThemeToggle />
 				<UserNav />
 			</div>
-			<BalanceSettingsDialog />
+			{isBalanceSettingsOpen ? (
+				<Suspense fallback={null}>
+					<LazyBalanceSettingsDialog />
+				</Suspense>
+			) : null}
 		</>
 	);
 };
